@@ -2,7 +2,16 @@
 ### "Помощник пользователя"
 .NET WPF MVVM Desktop application for increase the efficiency of Service Desk and first line sysadmins 
 
+
 ### Contribution instructions (Git)
+git clone B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper
+git remote add pb B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper
+git branch *YourLogin*
+git checkout **YourLogin
+--- some change
+git add *
+git commit -m "What you have changed"
+git push --set-upstream origin *YourLogin* -f
 
 
 ### TODO/Features
@@ -23,6 +32,7 @@
 - [ ] Usage statistics
 - [ ] Instructions page
 - [ ] MainWindow decomposition
+
 
 ### Contributors
 DASaveliev
