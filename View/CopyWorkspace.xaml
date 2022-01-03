@@ -36,13 +36,13 @@
                            Text="Откуда (имя компьютера):"/>
                 <TextBox Text="{Binding Path=ComputerNameFrom,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          Width="190"
-                         Height="20"/>
+                         Height="25"/>
                 <TextBlock Height="10"/>
                 <TextBlock HorizontalAlignment="Center"
                            Text="Куда (имя компьютера):"/>
                 <TextBox Text="{Binding Path=ComputerNameTo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          Width="190"
-                         Height="20"/>
+                         Height="25"/>
                 <TextBlock Height="17"/>
                 <Button TextElement.FontSize="13"
                         TextElement.Foreground="Black"
