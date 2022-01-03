@@ -32,6 +32,7 @@ git push --set-upstream origin *YourLogin* -f
 - [ ] Usage statistics
 - [ ] Instructions page
 - [ ] MainWindow decomposition
+- [x] Checking user account existence when copying workspace
 
 
 ### Contributors

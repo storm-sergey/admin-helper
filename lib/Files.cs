@@ -6,20 +6,20 @@ namespace AdminHelper.lib
 {
     public static class Files
     {
-        public static void CopyUserDirectory(string path, string user, string source, string destination)
+        public static void CopyUserDirectory(string userDirectory, string user, string source, string destination)
         {
-            try
-            {
+            //try
+            //{
                 FileSystem.CopyDirectory(
-                $@"\\{source}\d$\Users\{user}\{path}",
-                $@"\\{destination}\d$\Users\{user}\{path}",
+                $@"\\{source}\d$\Users\{user}\{userDirectory}",
+                $@"\\{destination}\d$\Users\{user}\{userDirectory}",
                 UIOption.AllDialogs,
                 UICancelOption.ThrowException);
-            }
-            catch
-            {
-                throw new Exception("Copying user directory is failed");
-            }
+            //}
+            //catch
+            //{
+                //throw new Exception("Copying user directory is failed");
+            //}
         }
 
         public static void DeleteFilesInDirectory(string path)
@@ -57,6 +57,22 @@ namespace AdminHelper.lib
             {
                 throw new Exception("File deletign is failed");
             }
-        }  
+        }
+
+        public static bool CheckDirectoryExists(string path)
+        {
+            DirectoryInfo dir = new DirectoryInfo(path);
+            return dir.Exists;
+        }
+
+        public static bool CheckUserDirectoryExists(string userDirectory, string user, string computerName)
+        {
+            return CheckDirectoryExists($@"\\{computerName}\d$\Users\{user}\{userDirectory}");
+        }
+
+        public static bool CheckUserExists(string computerName, string user)
+        {
+            return CheckDirectoryExists($@"\\{computerName}\d$\Users\{user}");
+        }
     }
 }

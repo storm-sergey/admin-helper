@@ -32,6 +32,11 @@ namespace AdminHelper.Model
         {
             try
             {
+                if (!Files.CheckUserExists(ComputerNameTo, UserName))
+                {
+                    throw new Exception("На компьютере для перенёса рабочего стола отсутствует учётная запись"
+                        + " - необходимо залогиниться на компьютере на который переносится рабочий стол");
+                }
                 List<Task> tasks = new List<Task>();
                 foreach (string[] userFolder in userWorkspace)
                 {
