@@ -13,38 +13,49 @@ namespace AdminHelper.Model
         public string ComputerNameFrom;
         public string ComputerNameTo;
         public List<string> failed;
-        private readonly string[] paths = {
-            "Desktop",
-            "Documents",
-            "Favorites",
-            "Downloads",
-            "Pictures",
-        };
+        private readonly string[][] userWorkspace;
 
         public CopyWorkspaceM()
         {
             Domain = DOMAIN;
-            UserName = UserCredentials.UserName;
+            UserName = UserCredentials.RuningAs;
             failed = new List<string>();
+            userWorkspace = new string[5][];
+            userWorkspace[0] = new string[2] { "Desktop", "Рабочий стол" };
+            userWorkspace[1] = new string[2] { "Documents", "Документы" };
+            userWorkspace[2] = new string[2] { "Favorites", "Избранное" };
+            userWorkspace[3] = new string[2] { "Downloads", "Загрузки" };
+            userWorkspace[4] = new string[2] { "Pictures", "Изображение" };
         }
 
         public async Task CopyUserWorkspace()
         {
-            List<Task> tasks = new List<Task>();
-            foreach (string path in paths)
+            try
             {
-                tasks.Add(Task.Run(() => {
-                    try
+                List<Task> tasks = new List<Task>();
+                foreach (string[] userFolder in userWorkspace)
+                {
+                    foreach (string folderNameVar in userFolder)
                     {
-                        Files.CopyUserDirectory(path, UserName, ComputerNameFrom, ComputerNameTo);
+                        if (Files.CheckUserDirectoryExists(folderNameVar, UserName, ComputerNameFrom))
+                        {
+                            tasks.Add(Task.Run(() =>
+                            {
+                                Files.CopyUserDirectory(folderNameVar, UserName, ComputerNameFrom, ComputerNameTo);
+                            }));
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
-                    catch (Exception)
-                    {
-                        failed.Add(path);
-                    }
-                }));
+                }
+                await Task.WhenAll(tasks);
             }
-            await Task.WhenAll(tasks);
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }
