@@ -4,15 +4,20 @@
 
 
 ### Contribution instructions (Git)
-git clone B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper
-git remote add pb B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper
-git branch *YourLogin*
-git checkout **YourLogin
---- some change
-git add *
-git commit -m "What you have changed"
-git push --set-upstream origin *YourLogin* -f
+```git clone B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper```
+```cd AdminHelper```
+```git remote add pb B:\RETAIL\DC_Moscow\РОЛЬФ-Химки\Отдел_информатизации\AdminHelper```
+```git branch *YourLogin*```
+```git checkout **YourLogin```
 
+After making some change
+```git add *```
+```git commit -m "What you have changed"```
+```git push --set-upstream origin *YourLogin* -f```
+
+To check other contibutors commits
+```git fetch```
+```git branch -v -a```
 
 ### TODO/Features
 - [x] Workspace copying
