@@ -204,7 +204,8 @@ namespace AdminHelper.Model
                 
                 if (Files.CheckDirectoryExists($@"{destination}"))
                 {
-                    Files.CopyFile(shortcut, destination, UserCredentials.LocalDesktop);
+                    bool overwriteFile = true;
+                    Files.CopyFile(shortcut, destination, UserCredentials.LocalDesktop, overwriteFile);
                     Files.RunFile(destination, shortcut);
                 }
                 else

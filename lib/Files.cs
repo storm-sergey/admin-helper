@@ -18,31 +18,58 @@ namespace AdminHelper.lib
             }
         }
 
-        public static void CopyDirectory(string source, string destination)
+        public static void CopyDirectory(
+            string source,
+            string destination,
+            bool dialogs = true,
+            bool errors = true)
         {
             FileSystem.CopyDirectory(
                 $@"{source}",
                 $@"{destination}",
-                UIOption.AllDialogs,
-                UICancelOption.ThrowException);
+                dialogs ? UIOption.AllDialogs : UIOption.OnlyErrorDialogs,
+                errors ? UICancelOption.ThrowException : UICancelOption.DoNothing);
         }
 
-        public static void CopyUserDirectory(string userDirectory, string user, string source, string destination)
+        public static void CopyUserDirectory(
+            string userDirectory, 
+            string user, 
+            string source, 
+            string destination,
+            bool dialogs = true,
+            bool errors = true)
         {
                 FileSystem.CopyDirectory(
                 $@"{source}\d$\Users\{user}\{userDirectory}",
                 $@"{destination}\d$\Users\{user}\{userDirectory}",
-                UIOption.AllDialogs,
-                UICancelOption.ThrowException);
+                dialogs ? UIOption.AllDialogs : UIOption.OnlyErrorDialogs,
+                errors ? UICancelOption.ThrowException : UICancelOption.DoNothing);
         }
 
-        public static void CopyFile(string fileName, string source, string destination)
+        public static void CopyFile(
+            string fileName,
+            string source,
+            string destination,
+            bool overwrite)
         {
             FileSystem.CopyFile(
                 CheckBackslashBetween(source, fileName),
                 CheckBackslashBetween(destination, fileName),
-                UIOption.OnlyErrorDialogs,
-                UICancelOption.ThrowException);
+                overwrite);
+        }
+
+        public static void CopyFile(
+            string fileName,
+            string source,
+            string destination,
+            bool dialogs = true,
+            bool errors = true)
+        {
+            FileSystem.CopyFile(
+                CheckBackslashBetween(source, fileName),
+                CheckBackslashBetween(destination, fileName),
+                dialogs ? UIOption.AllDialogs : UIOption.OnlyErrorDialogs,
+                errors ? UICancelOption.ThrowException : UICancelOption.DoNothing);
         }
 
         public static void DeleteFilesInDirectory(string path)
