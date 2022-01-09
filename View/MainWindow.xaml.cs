@@ -59,5 +59,10 @@ namespace AdminHelper.View
         {
             mainWindowVM.RemoveChromeCache();
         }
+
+        private void Button_Install_Punto_Switcher(object sender, RoutedEventArgs e)
+        {
+            mainWindowVM.InstallPuntoSwitcher();
+        }
     }
 }

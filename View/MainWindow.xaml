@@ -121,6 +121,12 @@
                                 Click="Button_Del_Chrome_Cache_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Очистить кэш Chrome"/>
+                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                TextElement.FontSize="12"
+                                Padding="0"
+                                Click="Button_Install_Punto_Switcher"
+                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                Content="Установить Punto Switcher"/>
                         </StackPanel>
                     </GroupBox>
                     <StackPanel Grid.Row="2"

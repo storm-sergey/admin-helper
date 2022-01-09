@@ -14,6 +14,7 @@ namespace AdminHelper.Model
         private readonly String ARMSFix;
         private readonly string BDriveScript;
         private readonly string SubnetsDealerships;
+        public readonly string D_Program_Files;
         public readonly string ChromeCachePath;
         public readonly string AppDataLocalTempPath;
         public ObservableCollection<string> Dealerships;
@@ -22,11 +23,12 @@ namespace AdminHelper.Model
         public string UserDealership;
         public string SelectedPrinter;
         public string PrinterLink;
-        
+
         public MainWindowM()
         {
-            BDriveScript = Properties.Resources.B_Drive;
-            ARMSFix = Properties.Resources.ARMS_Fix;
+            BDriveScript = Properties.Resources.B_Drive_bat;
+            ARMSFix = Properties.Resources.ARMS_Fix_reg;
+            D_Program_Files = @"D:\Program Files";
             ChromeCachePath = @"D:\Users\SAStorm\AppData\Local\Google\Chrome\User Data\Default\Cache";
             AppDataLocalTempPath = @"D:\Users\SAStorm\AppData\Local\Temp";
             // TODO: test without internter connection
@@ -44,7 +46,7 @@ namespace AdminHelper.Model
         {
             try
             {
-                Regedit.EditBy(ARMSFix);
+                Regedit.RunRegedit(ARMSFix);
             }
             catch
             {
@@ -114,7 +116,7 @@ namespace AdminHelper.Model
                     if (subnetDC[dealershipTitleStart] != '*')
                     {
                         string DC = subnetDC.Substring(dealershipTitleStart, subnetDC.Length - 1 - dealershipTitleStart).ToUpperInvariant();
-                            
+
                         singlesDealerships.Add(DC);
                     }
                 }
@@ -183,6 +185,36 @@ namespace AdminHelper.Model
                 {
                     Printer.ConnectPrinter(SelectedPrinter);
                 }
+            }
+        }
+
+        public void InstallPuntoSwitcher()
+        {
+            try
+            {
+                string source = @"\\1\Distr\Punto Switcher";
+                string shortcut = "Punto Switcher.lnk";
+                if (!Files.CheckDirectoryExists(source))
+                {
+                    throw new Exception("Punto Switcher недоступен для скачивания, "
+                        + "обратитесь к системным администраторам");
+                }
+                string destination = $@"{D_Program_Files}\Punto Switcher";
+                Files.CopyDirectory(source, destination);
+                
+                if (Files.CheckDirectoryExists($@"{destination}"))
+                {
+                    Files.CopyFile(shortcut, destination, UserCredentials.LocalDesktop);
+                    Files.RunFile(destination, shortcut);
+                }
+                else
+                {
+                    new Exception("Не удалось установить Punto Switcher на Ваш компьютер. Обратитесь к системным администраторам.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

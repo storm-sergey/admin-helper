@@ -67,7 +67,7 @@ namespace AdminHelper.ViewModel
             get => mainWindowM.PrinterLink;
         }
 
-        // TODO: show messages from return model methods
+        // TODO: show messages strings should be from model return
         public void MakeATicket()
         {
             TicketClaim = "";
@@ -97,6 +97,12 @@ namespace AdminHelper.ViewModel
         {
             mainWindowM.RemoveChromeCache();
             ShowMessage("Кэш Google Chrome очищен");
+        }
+
+        public void InstallPuntoSwitcher()
+        {
+            mainWindowM.InstallPuntoSwitcher();
+            ShowMessage("Punto Switcher установлен");
         }
     }
 }
