@@ -118,11 +118,11 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="ARMS_Fix" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\ARMS_Fix.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
+  <data name="ARMS_Fix_reg" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\arms_fix.reg.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-16</value>
   </data>
-  <data name="B_Drive" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\B_Drive.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  <data name="B_Drive_bat" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\b_drive.bat.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
   </data>
   <data name="Subnets_12_12_2021" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Subnets_12.12.2021.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

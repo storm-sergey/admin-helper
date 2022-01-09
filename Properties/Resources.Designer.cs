@@ -73,9 +73,9 @@ namespace AdminHelper.Properties {
         ///&quot;DefaultConnectionSettings&quot;=hex:46,00,00,00,4d,00,00,00,05,00,00,00,1f,00,00,\
         ///  00,6f,63,74,72,6f,6c,66,2d,67,77,2e,69,6e,74,2e,72,6f,6c,66,63,6f,72,70,2e [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string ARMS_Fix {
+        public static string ARMS_Fix_reg {
             get {
-                return ResourceManager.GetString("ARMS_Fix", resourceCulture);
+                return ResourceManager.GetString("ARMS_Fix_reg", resourceCulture);
             }
         }
         
@@ -84,9 +84,9 @@ namespace AdminHelper.Properties {
         ///NET USE B: /DELETE
         ///NET USE B: \\int.rolfcorp.ru\sfc /persistent:no &gt;nul.
         /// </summary>
-        public static string B_Drive {
+        public static string B_Drive_bat {
             get {
-                return ResourceManager.GetString("B_Drive", resourceCulture);
+                return ResourceManager.GetString("B_Drive_bat", resourceCulture);
             }
         }
         
