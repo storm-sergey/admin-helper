@@ -33,6 +33,7 @@ git push --set-upstream origin *YourLogin* -f
 - [ ] Instructions page
 - [ ] MainWindow decomposition
 - [x] Checking user account existence when copying workspace
+- [x] Punto Switcher installation
 
 
 ### Contributors
