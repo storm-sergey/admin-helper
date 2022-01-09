@@ -6,20 +6,43 @@ namespace AdminHelper.lib
 {
     public static class Files
     {
-        public static void CopyUserDirectory(string userDirectory, string user, string source, string destination)
+        private static string CheckBackslashBetween(string path, string name)
         {
-            //try
-            //{
-                FileSystem.CopyDirectory(
-                $@"\\{source}\d$\Users\{user}\{userDirectory}",
-                $@"\\{destination}\d$\Users\{user}\{userDirectory}",
+            if (path.EndsWith("\\"))
+            {
+                return path + name;
+            }
+            else
+            {
+                return $@"{path}\{name}";
+            }
+        }
+
+        public static void CopyDirectory(string source, string destination)
+        {
+            FileSystem.CopyDirectory(
+                $@"{source}",
+                $@"{destination}",
                 UIOption.AllDialogs,
                 UICancelOption.ThrowException);
-            //}
-            //catch
-            //{
-                //throw new Exception("Copying user directory is failed");
-            //}
+        }
+
+        public static void CopyUserDirectory(string userDirectory, string user, string source, string destination)
+        {
+                FileSystem.CopyDirectory(
+                $@"{source}\d$\Users\{user}\{userDirectory}",
+                $@"{destination}\d$\Users\{user}\{userDirectory}",
+                UIOption.AllDialogs,
+                UICancelOption.ThrowException);
+        }
+
+        public static void CopyFile(string fileName, string source, string destination)
+        {
+            FileSystem.CopyFile(
+                CheckBackslashBetween(source, fileName),
+                CheckBackslashBetween(destination, fileName),
+                UIOption.OnlyErrorDialogs,
+                UICancelOption.ThrowException);
         }
 
         public static void DeleteFilesInDirectory(string path)
@@ -73,6 +96,16 @@ namespace AdminHelper.lib
         public static bool CheckUserExists(string computerName, string user)
         {
             return CheckDirectoryExists($@"\\{computerName}\d$\Users\{user}");
+        }
+
+        public static void RunFile(string file)
+        {
+            System.Diagnostics.Process.Start(file);
+        }
+
+        public static void RunFile(string path, string fileName)
+        {
+            RunFile(CheckBackslashBetween(path, fileName));
         }
     }
 }
