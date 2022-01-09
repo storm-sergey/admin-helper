@@ -7,7 +7,8 @@
         xmlns:vm="clr-namespace:AdminHelper.ViewModel"
         mc:Ignorable="d"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        Title="Перенос рабочего стола" Height="320" Width="350">
+        Title="Перенос рабочего стола"
+        Height="320" Width="350">
     <Window.DataContext>
         <vm:CopyWorkspaceVM/>
     </Window.DataContext>
@@ -22,7 +23,7 @@
                   materialDesign:ColorZoneAssist.Mode="Custom"
                   materialDesign:ColorZoneAssist.Background="White"
                   materialDesign:ColorZoneAssist.Foreground="White"
-                  Margin="10"
+                  Margin="5"
                   Padding="10">
             <GroupBox.Header>
                 <Label>
@@ -35,12 +36,14 @@
             </GroupBox.Header>
             <StackPanel>
                 <TextBlock HorizontalAlignment="Center"
+                           Style="{DynamicResource MaterialDesignTextBlock}"
                            Text="Откуда (имя компьютера):"/>
                 <TextBox Text="{Binding Path=ComputerNameFrom,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          Width="190"
                          Height="25"/>
                 <TextBlock Height="10"/>
                 <TextBlock HorizontalAlignment="Center"
+                           Style="{DynamicResource MaterialDesignTextBlock}"
                            Text="Куда (имя компьютера):"/>
                 <TextBox Text="{Binding Path=ComputerNameTo,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
                          Width="190"
