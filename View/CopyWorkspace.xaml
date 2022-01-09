@@ -28,6 +28,8 @@
                 <Label>
                     <Button x:Name="GroupBoxHeaderLabelButton"
                             Click="GroupBoxHeaderLabelButton_Click"
+                            TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                            Style="{DynamicResource MaterialDesignFlatButton}"
                             IsEnabled="False"/>
                 </Label>
             </GroupBox.Header>
