@@ -40,8 +40,8 @@ namespace AdminHelper.lib
             bool errors = true)
         {
                 FileSystem.CopyDirectory(
-                $@"{source}\d$\Users\{user}\{userDirectory}",
-                $@"{destination}\d$\Users\{user}\{userDirectory}",
+                $@"\\{source}\d$\Users\{user}\{userDirectory}",
+                $@"\\{destination}\d$\Users\{user}\{userDirectory}",
                 dialogs ? UIOption.AllDialogs : UIOption.OnlyErrorDialogs,
                 errors ? UICancelOption.ThrowException : UICancelOption.DoNothing);
         }
