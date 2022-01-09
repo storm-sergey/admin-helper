@@ -19,6 +19,7 @@ namespace AdminHelper.View
         private async void Button_Click_CopyDesktop(object sender, RoutedEventArgs e)
         {
             await copyWorkspaceVM.CopyUserWorkspace();
+            Close();
         }
 
         private void GroupBoxHeaderLabelButton_Click(object sender, RoutedEventArgs e)
