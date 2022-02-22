@@ -27,9 +27,10 @@ To check other contibutors commits
 - [x] Fast fixes
 - [ ] Enrich the Fast fixes
 - [x] Printers connection
+- [ ] Printers connection by printer map
 - [ ] Tray icon
 - [ ] Screenshot
-- [ ] Hidden printers checking and connection by printer map
+- [ ] Hidden printers checking
 - [ ] Fix too long WMI printers query
 - [ ] Non-modal popup
 - [ ] Exceptions logic
@@ -39,6 +40,8 @@ To check other contibutors commits
 - [ ] MainWindow decomposition
 - [x] Checking user account existence when copying workspace
 - [x] Punto Switcher installation
+- [ ] Code coverage
+- [ ] CI/CD Pipeline
 
 
 ### Contributors

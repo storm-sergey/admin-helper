@@ -64,5 +64,10 @@ namespace AdminHelper.View
         {
             mainWindowVM.InstallPuntoSwitcher();
         }
+
+        private void Button_Show_Computer_Name_And_IP(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

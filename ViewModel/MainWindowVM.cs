@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using System.Windows;
 using AdminHelper.Model;
 using static AdminHelper.Globals;
 
@@ -12,12 +11,6 @@ namespace AdminHelper.ViewModel
         public MainWindowVM()
         {
             mainWindowM = new MainWindowM();
-        }
-
-        // TODO: Show with non-modal popup
-        public void ShowMessage(string message)
-        {
-            MessageBox.Show(message);
         }
 
         public string TicketClaim
@@ -67,42 +60,35 @@ namespace AdminHelper.ViewModel
             get => mainWindowM.PrinterLink;
         }
 
-        // TODO: show messages strings should be from model return
         public void MakeATicket()
         {
             TicketClaim = "";
             mainWindowM.MakeATicket();
-            ShowMessage("Заявка отправлена");
         }
 
         public void ConnectPrinter()
         {
             mainWindowM.ConnectPrinter();
-            ShowMessage("Принтер подключен");
         }
 
         public void BDrive()
         {
             mainWindowM.BDrive();
-            ShowMessage("Диск B подключен");
         }
 
         public void FixARMS()
         {
             mainWindowM.FixARMS();
-            ShowMessage("Перезапустите Internet Explorer");
         }
 
         public void RemoveChromeCache()
         {
             mainWindowM.RemoveChromeCache();
-            ShowMessage("Кэш Google Chrome очищен");
         }
 
         public void InstallPuntoSwitcher()
         {
             mainWindowM.InstallPuntoSwitcher();
-            ShowMessage("Punto Switcher установлен");
         }
     }
 }

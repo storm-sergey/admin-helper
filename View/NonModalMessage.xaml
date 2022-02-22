@@ -1,0 +1,40 @@
+﻿<Window x:Class="AdminHelper.View.NonModalMessage"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminHelper"
+        xmlns:vm="clr-namespace:AdminHelper.ViewModel"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="(•‿•)                            "
+        x:Name="NonModalMessageWindow"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Style="{DynamicResource MaterialDesignTextBlock}"
+                       HorizontalAlignment="Center"
+                       Margin="15"
+                       x:Name="NonModalMessageText"
+                       Text="Пустой вызов NonModalMessage"/>
+            <Button TextElement.FontSize="12"
+                    TextElement.Foreground="Black"
+                    Content="ОК"
+                    Click="Button_Click_Close"
+                    Padding="0"
+                    Margin="15 0 15 20"
+                    Width="50"
+                    Height="28">
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

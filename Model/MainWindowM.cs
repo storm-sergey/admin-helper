@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AdminHelper.lib;
 using static AdminHelper.Globals;
-
+using AdminHelper.View;
 
 namespace AdminHelper.Model
 {
@@ -47,6 +47,8 @@ namespace AdminHelper.Model
             try
             {
                 Regedit.RunRegedit(ARMSFix);
+                NonModalMessage message = new NonModalMessage("Перезапустите Internet Explorer");
+                message.Show();
             }
             catch
             {
@@ -59,6 +61,8 @@ namespace AdminHelper.Model
             try
             {
                 CMD.Process(BDriveScript);
+                NonModalMessage message = new NonModalMessage("Диск B подключен");
+                message.Show();
             }
             catch
             {
@@ -71,6 +75,8 @@ namespace AdminHelper.Model
             try
             {
                 Files.DeleteFilesInDirectory(ChromeCachePath);
+                NonModalMessage message = new NonModalMessage("Кэш Google Chrome очищен");
+                message.Show();
             }
             catch
             {
@@ -82,6 +88,8 @@ namespace AdminHelper.Model
         {
             string mockTicketReason = "Sent_by_AdminHelper";
             _MakeATicket(mockTicketReason, TicketClaim);
+            NonModalMessage message = new NonModalMessage("Заявка отправлена");
+            message.Show();
         }
 
         private void _MakeATicket(string ticketReason = "", string ticketClaim = "")
@@ -160,13 +168,14 @@ namespace AdminHelper.Model
             try
             {
                 string prefix = UserCredentials.LocationPrefix;
-                await Printer.FastGetListOfPrinters(prefix, printers);
-                string[] keys = {
-                    "Name",
-                    "Location",
-                    "Comment",
-                };
-                // TODO: Fix memory leak
+                await lib.Printers.FastGetListOfPrinters(prefix, printers);
+
+                // TODO: Fix memory leak with GetListOfPrinters
+                //string[] keys = {
+                //    "Name",
+                //    "Location",
+                //    "Comment",
+                //};
                 //await Printer.GetListOfPrinters(prefix, keys, printers);
             }
             catch
@@ -181,10 +190,12 @@ namespace AdminHelper.Model
             {
                 string[] printerProperies = SelectedPrinter.Split(' ');
                 string printerName = printerProperies[0];
-                if (!Printer.IsPrinterInstalled(printerName))
+                if (!lib.Printers.IsPrinterInstalled(printerName))
                 {
-                    Printer.ConnectPrinter(SelectedPrinter);
+                    lib.Printers.ConnectPrinter(SelectedPrinter);
                 }
+                NonModalMessage message = new NonModalMessage("Принтер подключен");
+                message.Show();
             }
         }
 
@@ -207,6 +218,8 @@ namespace AdminHelper.Model
                     bool overwriteFile = true;
                     Files.CopyFile(shortcut, destination, UserCredentials.LocalDesktop, overwriteFile);
                     Files.RunFile(destination, shortcut);
+                    NonModalMessage message = new NonModalMessage("Punto Switcher установлен");
+                    message.Show();
                 }
                 else
                 {
