@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace AdminHelper.lib
 {
-    public class Printer
+    public class Printers
     {
         public static void ConnectPrinter(string printerName)
         {

@@ -4,7 +4,7 @@ using System.IO;
 
 namespace AdminHelper.lib
 {
-    public static class TempFile
+    public static class TempFiles
     {
         private static string MakeTempFile(string format)
         {
