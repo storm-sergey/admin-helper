@@ -6,7 +6,7 @@ namespace AdminHelper.lib
     {
         public static void RunRegedit(String script)
         {
-            TempFile.MakeTempHook(script, ".reg", "regedit.exe");
+            TempFiles.MakeTempHook(script, ".reg", "regedit.exe");
         }
     }
 }

@@ -6,7 +6,7 @@ namespace AdminHelper.lib
     {
         public static void RunVBS(String script)
         {
-            TempFile.MakeTempHook(script, ".vbs");
+            TempFiles.MakeTempHook(script, ".vbs");
         }
     }
 }
