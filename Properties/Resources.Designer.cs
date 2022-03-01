@@ -121,6 +121,26 @@ namespace AdminHelper.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Print_servers {
+            get {
+                object obj = ResourceManager.GetObject("Print_servers", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Printers_rooms {
+            get {
+                object obj = ResourceManager.GetObject("Printers_rooms", resourceCulture);
+                return ((byte[])(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 205.204.193.0/24 Черная Грязь
         ///205.204.207.0/24 ХОЛДИНГ
         ///192.168.117.0/24 ул. Алтуфьевское шоссе, д.31, строение 7, РОЛЬФ-ХОЛДИНГ
@@ -134,6 +154,16 @@ namespace AdminHelper.Properties {
         public static string Subnets_19_03_2022 {
             get {
                 return ResourceManager.GetString("Subnets_19_03_2022", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Byte[].
+        /// </summary>
+        public static byte[] Ticket_templates {
+            get {
+                object obj = ResourceManager.GetObject("Ticket_templates", resourceCulture);
+                return ((byte[])(obj));
             }
         }
     }

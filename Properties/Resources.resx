@@ -130,7 +130,16 @@
   <data name="ICON" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\icons\ICON.ico;System.Drawing.Icon, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Printers_rooms" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\printers_rooms.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
+  <data name="Print_servers" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\print_servers.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </data>
   <data name="Subnets_19_03_2022" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Subnets_19.03.2022.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;windows-1251</value>
+  </data>
+  <data name="Ticket_templates" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\resources\ticket_templates.json;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
 </root>
