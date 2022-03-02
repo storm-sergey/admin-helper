@@ -303,13 +303,39 @@ namespace AdminHelper.lib
             return Data;
         }
 
-        public string[] GetDataArrayFromLeaf()
+        public string[] GetDataArrayFromThisLeaf()
         {
             if (IsLeafArray())
             {
                 return Data.Split(' ');
             }
             return null;   
+        }
+
+        public string GetChildData()
+        {
+            HashSet<JsonTreeNode>.Enumerator children = Children.GetEnumerator();
+            while (children.MoveNext())
+            {
+                return children.Current.GetData();
+            }
+            return null;
+        }
+
+        public string[] GetChildrenData()
+        {
+            List<string> data = new List<string>();
+            HashSet<JsonTreeNode>.Enumerator children = Children.GetEnumerator();
+            while (children.MoveNext())
+            {
+                data.Add(children.Current.GetData());
+            }
+
+            if (data.Count > 0)
+            {
+                return data.ToArray();
+            }
+            return null;
         }
 
         public bool IsALeaf()
