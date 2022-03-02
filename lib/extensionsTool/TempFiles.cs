@@ -13,6 +13,11 @@ namespace AdminHelper.lib
             return tempFile;
         }
 
+        private static string MakeTempDir()
+        {
+            return $"{Path.GetTempPath()}{Path.GetRandomFileName()}";
+        }
+
         private static void FillTempFile(string tempFile, String script)
         {
             if (File.Exists(tempFile))
@@ -39,6 +44,14 @@ namespace AdminHelper.lib
             }
         }
 
+        private static void RemoveTempDir(string tempDir)
+        {
+            if (Directory.Exists(tempDir))
+            {
+                Directory.Delete(tempDir, true);
+            }
+        }
+
         private static void RunTempFile(string tempFile, string processName = null)
         {
             Process tempFileProcess;
@@ -61,7 +74,6 @@ namespace AdminHelper.lib
                 tempFile = MakeTempFile(format);
                 FillTempFile(tempFile, script);
                 RunTempFile(tempFile, processName);
-                RemoveTempFile(tempFile);
             }
             catch (Exception ex)
             {
@@ -70,6 +82,26 @@ namespace AdminHelper.lib
             finally
             {
                 RemoveTempFile(tempFile);
+            }
+        }
+
+        public static void MakeTempHook(string fileName, string source, Action<string> handler)
+        {
+            string tempDir = "";
+            try
+            {
+                tempDir = MakeTempDir();
+                Files.CopyFile(fileName, source, tempDir, true);
+                handler($@"{tempDir}\{fileName}");
+                RemoveTempDir(tempDir);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                RemoveTempDir(tempDir);
             }
         }
     }
