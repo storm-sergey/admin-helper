@@ -53,23 +53,32 @@ namespace AdminHelper.lib
         /// <returns> Local host IP </returns>
         public static IPAddress GetLocalhostIP()
         {
-            NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
-            foreach (NetworkInterface netInterface in netInterfaces)
+            try
             {
-                IPInterfaceProperties ipProperties = netInterface.GetIPProperties();
-                if (ipProperties.DnsSuffix.ToLower().Equals(ROLF_DNS_SUFFIX))
+                NetworkInterface[] netInterfaces = NetworkInterface.GetAllNetworkInterfaces();
+                foreach (NetworkInterface netInterface in netInterfaces)
                 {
-                    foreach (UnicastIPAddressInformation ip in ipProperties.UnicastAddresses)
+                    IPInterfaceProperties ipProperties = netInterface.GetIPProperties();
+                    if (ipProperties.DnsSuffix.ToLower().Equals(ROLF_DNS_SUFFIX))
                     {
-                        // IPv4 checking
-                        if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                        foreach (UnicastIPAddressInformation ip in ipProperties.UnicastAddresses)
                         {
-                            return ip.Address;
+                            // IPv4 checking
+                            if (ip.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                            {
+                                return ip.Address;
+                            }
                         }
                     }
                 }
+                return netInterfaces[0].GetIPProperties().UnicastAddresses[0].Address;
             }
-            throw new Exception("Getting local host IP is failed");
+            catch (Exception ex)
+            {
+                AppException.Handle("Getting local host IP is failed", ex);
+                return IPAddress.Parse("0.0.0.0");
+            }
+            
         }
 
         /// <summary>
