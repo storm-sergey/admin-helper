@@ -39,6 +39,7 @@ namespace AdminHelper.lib
             bool dialogs = true,
             bool errors = true)
         {
+            // TODO: exception
                 FileSystem.CopyDirectory(
                 $@"\\{source}\d$\Users\{user}\{userDirectory}",
                 $@"\\{destination}\d$\Users\{user}\{userDirectory}",
@@ -109,20 +110,20 @@ namespace AdminHelper.lib
             }
         }
 
-        public static bool CheckDirectoryExists(string path)
+        public static bool CheckDirectoryExistence(string path)
         {
             DirectoryInfo dir = new DirectoryInfo(path);
             return dir.Exists;
         }
 
-        public static bool CheckUserDirectoryExists(string userDirectory, string user, string computerName)
+        public static bool CheckUserDirectoryExistence(string userDirectory, string user, string computerName)
         {
-            return CheckDirectoryExists($@"\\{computerName}\d$\Users\{user}\{userDirectory}");
+            return CheckDirectoryExistence($@"\\{computerName}\d$\Users\{user}\{userDirectory}");
         }
 
-        public static bool CheckUserExists(string computerName, string user)
+        public static bool CheckUserExistence(string computerName, string user)
         {
-            return CheckDirectoryExists($@"\\{computerName}\d$\Users\{user}");
+            return CheckDirectoryExistence($@"\\{computerName}\d$\Users\{user}");
         }
 
         public static void RunFile(string file)
