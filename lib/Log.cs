@@ -17,9 +17,15 @@ namespace AdminHelper.lib
             Record(e.Message);
         }
 
+        // TODO
         private static void Send(string log)
         {
-            //Http.Request("POST", Globals.LOG_ENDPOINT, Json.MakeLog(log));
+            throw new NotImplementedException();
+            if (LOG_ENDPOINT != null)
+            {
+                // TODO: Json.MakeLog()
+                // Http.Request("POST", LOG_ENDPOINT, Json.MakeLog(log));
+            }
         }
 
         private static void AddLocal(string log)

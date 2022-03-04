@@ -7,7 +7,7 @@ namespace AdminHelper.lib
 {
     public static class Http
     {
-        private static readonly int timeoutSec = 90;
+        private static readonly int timeoutSec = 10;
         private static readonly HttpClient client = new HttpClient();
         public static async Task<byte[]> Request(
             string method,
