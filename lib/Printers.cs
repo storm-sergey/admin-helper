@@ -4,25 +4,86 @@ using System.Management;
 using System.Drawing.Printing;
 using static AdminHelper.Globals;
 using System.Collections.ObjectModel;
+using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace AdminHelper.lib
 {
     public class Printers
     {
-        public static void ConnectPrinter(string printerName)
+        #region Printer managing
+        // TODO
+        /// <summary>
+        /// MOCK
+        /// </summary>
+        /// <param name="printerName"></param>
+        public static void ReconnectDirectly(string printerName)
+        {
+            return;
+        }
+
+        public static PrinterSettings.StringCollection GetLocalInstalledPrinterNames()
+        {
+            return PrinterSettings.InstalledPrinters;
+        }
+
+        public static void DeleteAllPrinters()
+        {
+
+            foreach(string printer in GetLocalInstalledPrinterNames())
+            {
+                try
+                {
+                    DeletePrinter(printer);
+                }
+                catch
+                {
+                    throw new Exception($"Printer {printer} isn't deleted");
+                }
+            }
+        }
+
+        public static bool DeletePrinter(string printerName)
+        {
+            ManagementScope oManagementScope = new ManagementScope(ManagementPath.DefaultPath);
+            oManagementScope.Connect();
+
+            SelectQuery oSelectQuery = new SelectQuery
+            {
+                QueryString = $@"SELECT * FROM Win32_Printer WHERE Name = '{printerName.Replace("\\", "\\\\")}'"
+            };
+
+            ManagementObjectSearcher oObjectSearcher = new ManagementObjectSearcher(oManagementScope, oSelectQuery);
+            ManagementObjectCollection oObjectCollection = oObjectSearcher.Get();
+
+            if (oObjectCollection.Count != 0)
+            {
+                foreach (ManagementObject oItem in oObjectCollection)
+                {
+                    oItem.Delete();
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public static void ConnectPrinter(string printerName, string printServer = "")
         {
             try
             {
                 printerName = printerName.Trim();
-                if (IsPrinterInstalled(printerName))
+                if (IsPrinterInstalledAndValid(printerName, printServer))
                 {
-                    throw new Exception("Printer is already connected");
+                    return;
+                    //throw new Exception("Printer is already connected");
                 }
                 using (ManagementClass win32_Printer = new ManagementClass("Win32_Printer"))
                 {
                     using (ManagementBaseObject inputParam = win32_Printer.GetMethodParameters("AddPrinterConnection"))
                     {
-                        inputParam.SetPropertyValue("Name", $@"\\{PRINT_SERVER}\{printerName}");
+                        string printer = String.IsNullOrEmpty(printServer) ? printerName : $@"\\{printServer}\{printerName}";
+
+                        inputParam.SetPropertyValue("Name", printer);
                         ManagementBaseObject result = win32_Printer.InvokeMethod("AddPrinterConnection", inputParam, null);
                     }
                 }
@@ -33,11 +94,12 @@ namespace AdminHelper.lib
             }
         }
 
-        public static bool IsPrinterInstalled(string printerName)
+        public static bool IsPrinterInstalledAndValid(string printerName, string printServer = "")
         {
             foreach (string installedPrinterName in PrinterSettings.InstalledPrinters)
             {
-                if (installedPrinterName == $@"\\{PRINT_SERVER}\{printerName}")
+                if (installedPrinterName == printerName
+                ||  installedPrinterName == $@"\\{printServer}\{printerName}")
                 {
                     PrinterSettings printer = new PrinterSettings
                     {
@@ -51,23 +113,93 @@ namespace AdminHelper.lib
             }
             return false;
         }
+        #endregion
 
-        public async static Task FastGetListOfPrinters(string prefix, ObservableCollection<string> aPutPlace)
+        #region Default printer
+        public static string GetDefaultPrinterName()
+        {
+            foreach (string installedPrinterName in PrinterSettings.InstalledPrinters)
+            {
+                PrinterSettings printer = new PrinterSettings
+                {
+                    PrinterName = installedPrinterName
+                };
+                if (printer.IsDefaultPrinter)
+                {
+                    return installedPrinterName;
+                }
+            }
+            return "";
+        }
+
+        public static void SetDefaultPrinter(string printerName, string printServer = null)
+        {
+            string printer = printServer != null ? $@"\\{printServer}\{printerName}" : printerName;
+            if (IsPrinterInstalledAndValid(printer))
+            {
+                bool result;
+                try
+                {
+                    result = _SetDefaultPrinter(printer);
+                }
+                catch
+                {
+                    result = _SetDefaultPrinter2(printer);
+                }
+                bool check = GetDefaultPrinterName() == printer;
+                if (!result
+                ||  !check)
+                {
+                    throw new Exception($"Принтер {printer} не установлен по умлочанию");
+                }
+            }
+        }
+
+        private static bool _SetDefaultPrinter(string printerName)
+        {
+            ManagementScope oManagementScope = new ManagementScope(ManagementPath.DefaultPath);
+            oManagementScope.Connect();
+
+            SelectQuery oSelectQuery = new SelectQuery
+            {
+                QueryString = $@"SELECT * FROM Win32_Printer WHERE Name = '{printerName.Replace("\\", "\\\\")}'"
+            };
+
+            ManagementObjectSearcher oObjectSearcher = new ManagementObjectSearcher(oManagementScope, oSelectQuery);
+            ManagementObjectCollection oObjectCollection = oObjectSearcher.Get();
+
+            if (oObjectCollection.Count != 0)
+            {
+                foreach (ManagementObject oItem in oObjectCollection)
+                {
+                    oItem.InvokeMethod("SetDefaultPrinter", new object[] { printerName });
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        [DllImport("winspool.drv", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern bool _SetDefaultPrinter2(string Name);
+        #endregion
+
+        #region Printer list from print server
+        public async static Task FastGetListOfPrinters(string printServer, string prefix, ObservableCollection<string> aPutPlace)
         {
             string request = $"SELECT Name FROM Win32_Share WHERE Name LIKE \"%{prefix}%\"";
             string[] keys = { "Name", };
-            await PutWMIWin32Responce(PRINT_SERVER, request, keys, aPutPlace);
+            await PutWMIWin32Responce(printServer, request, keys, aPutPlace);
         }
 
-        public async static Task GetListOfPrinters(string prefix, string[] keys, ObservableCollection<string> aPutPlace)
+        public async static Task GetListOfPrinters(string printServer, string prefix, ObservableCollection<string> aPutPlace, string[] keys = null)
         {
             string request = $"SELECT * FROM Win32_Printer WHERE Name LIKE \"%{prefix}%\"";
-            await PutWMIWin32Responce(PRINT_SERVER, request, keys, aPutPlace);
+            await PutWMIWin32Responce(printServer, request, keys, aPutPlace);
         }
 
+       
         /// <summary>
         /// Make query
-        /// WPF Only method
         /// </summary>
         /// <param name="hostname"> "dp-print-02" for example </param>
         /// <param name="request"> WMI request </param>
@@ -97,7 +229,6 @@ namespace AdminHelper.lib
 
         /// <summary>
         /// Getting by WMI of Object properties
-        /// WPF Only method
         /// </summary>
         private async static Task PutInUIThread(
             string[] keys,
@@ -117,14 +248,18 @@ namespace AdminHelper.lib
                     App.Current.Dispatcher.Invoke((Action)delegate
                     {
                         //string objProperties = "";
-                        foreach (string key in keys)
+                        if (keys != null)
                         {
-                            objProperties += $"{obj[key]} ";
+                            foreach (string key in keys)
+                            {
+                                objProperties += $"{obj[key]} ";
+                            }
+                            aPutPlace.Add(objProperties);
                         }
-                        aPutPlace.Add(objProperties);
                     });
                 }
             });
         }
     }
+    #endregion
 }
