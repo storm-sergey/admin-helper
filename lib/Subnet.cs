@@ -25,7 +25,9 @@ namespace AdminHelper.lib
         public static bool IsNetworkAvailable()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
+            {
                 return false;
+            }
 
             foreach (NetworkInterface netInterface in NetworkInterface.GetAllNetworkInterfaces())
             {
@@ -35,7 +37,9 @@ namespace AdminHelper.lib
                 ||  (netInterface.Description.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0)
                 ||  (netInterface.Name.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0)
                 ||  (netInterface.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase)))
+                {
                     continue;
+                }
 
                 return true;
             }
