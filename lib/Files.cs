@@ -39,12 +39,19 @@ namespace AdminHelper.lib
             bool dialogs = true,
             bool errors = true)
         {
-            // TODO: exception
+            try
+            {
                 FileSystem.CopyDirectory(
                 $@"\\{source}\d$\Users\{user}\{userDirectory}",
                 $@"\\{destination}\d$\Users\{user}\{userDirectory}",
                 dialogs ? UIOption.AllDialogs : UIOption.OnlyErrorDialogs,
                 errors ? UICancelOption.ThrowException : UICancelOption.DoNothing);
+            }
+            catch
+            {
+                throw new Exception("Copying user directory is failed");
+            }
+                
         }
 
         public static void CopyFile(
