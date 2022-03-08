@@ -32,7 +32,12 @@ namespace AdminHelper.Model
         {
             try
             {
-                if (!Files.CheckUserExists(ComputerNameTo, UserName))
+                // TODO: make a checking on the View
+                if (ComputerNameFrom == ComputerNameTo)
+                {
+                    throw new Exception("Указан одно и то же имя компьютера для переноса рабочего стола");
+                }
+                if (!Files.CheckUserExistence(ComputerNameTo, UserName))
                 {
                     throw new Exception("На компьютере для перенёса рабочего стола отсутствует учётная запись"
                         + " - необходимо залогиниться на компьютере на который переносится рабочий стол");
@@ -42,7 +47,7 @@ namespace AdminHelper.Model
                 {
                     foreach (string folderNameVar in userFolder)
                     {
-                        if (Files.CheckUserDirectoryExists(folderNameVar, UserName, ComputerNameFrom))
+                        if (Files.CheckUserDirectoryExistence(folderNameVar, UserName, ComputerNameFrom))
                         {
                             tasks.Add(Task.Run(() =>
                             {
