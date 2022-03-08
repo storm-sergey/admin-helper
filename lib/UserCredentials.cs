@@ -12,7 +12,7 @@ namespace AdminHelper.lib
         public static string AppDataLocal { get => $@"D:\Users\{UserName}\AppData\Local"; }
         public static string LocalDesktop
         { 
-            get => Files.CheckDirectoryExists($@"D:\Users\{UserName}\Desktop")
+            get => Files.CheckDirectoryExistence($@"D:\Users\{UserName}\Desktop")
                 ? $@"D:\Users\{UserName}\Desktop"
                 : $@"D:\Users\{UserName}\Рабочий стол";
         }
