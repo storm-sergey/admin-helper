@@ -1,24 +1,37 @@
-﻿using System.Windows;
+﻿using System;
+using System.Threading.Tasks;
+using System.Windows;
 using AdminHelper.ViewModel;
 
-
+// Автопоиск
+// Чистка темпа
+// Квадратики Пронто
+// 
 namespace AdminHelper.View
 {
     public partial class CopyWorkspace : Window
     {
         private readonly CopyWorkspaceVM copyWorkspaceVM;
+        private readonly Action UnblockMainWindow;
 
-        public CopyWorkspace()
+        public CopyWorkspace(Action unblockMainWindow)
         {
+            this.UnblockMainWindow = unblockMainWindow;
             InitializeComponent();
             copyWorkspaceVM = new CopyWorkspaceVM();
             GroupBoxHeaderLabelButton.Content = $"Пользователь: {copyWorkspaceVM.UserName}";
             DataContext = copyWorkspaceVM;
         }
 
-        private async void Button_Click_CopyDesktop(object sender, RoutedEventArgs e)
+        private void CopyWorkspace_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            await copyWorkspaceVM.CopyUserWorkspace();
+            UnblockMainWindow();
+        }
+
+        private void Button_Click_CopyDesktop(object sender, RoutedEventArgs e)
+        {
+            // await copyWorkspaceVM.CopyUserWorkspace();
+            Task.Run(() => copyWorkspaceVM.CopyUserWorkspace());
             Close();
         }
 
@@ -26,5 +39,7 @@ namespace AdminHelper.View
         {
             // TODO: user changing
         }
+
+
     }
 }

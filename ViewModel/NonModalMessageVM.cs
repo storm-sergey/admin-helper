@@ -7,10 +7,11 @@ namespace AdminHelper.ViewModel
     {
         private readonly NonModalMessageM NonModalMessageM;
 
-        public NonModalMessageVM(string title, string message)
+        public NonModalMessageVM(string message, string title = "")
         {
-            NonModalMessageM = new NonModalMessageM(title, message);
+            NonModalMessageM = new NonModalMessageM(message, title);
         }
+
 
         public string Title { get => NonModalMessageM.Title; }
         public string Message { get => NonModalMessageM.Message; }

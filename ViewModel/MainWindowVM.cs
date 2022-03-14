@@ -1,6 +1,10 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows.Data;
+using System.Threading;
+using System.Windows.Controls;
 using AdminHelper.Model;
 using static AdminHelper.Globals;
+using System.Threading.Tasks;
 
 namespace AdminHelper.ViewModel
 {
@@ -11,6 +15,28 @@ namespace AdminHelper.ViewModel
         public MainWindowVM()
         {
             mainWindowM = new MainWindowM();
+        }
+
+
+        public bool GridIsEnabled
+        {
+            get => mainWindowM.GridIsEnabled;
+            set
+            {
+                mainWindowM.GridIsEnabled = value;
+                OnPropertyChange("GridIsEnabled");
+            }
+        }
+
+        public double GridOpacity
+        {
+            get => mainWindowM.GridOpacity;
+            set
+            {
+                mainWindowM.GridOpacity = value;
+                OnPropertyChange("GridOpacity");
+
+            }
         }
 
         public string TicketClaim
@@ -60,35 +86,36 @@ namespace AdminHelper.ViewModel
             get => mainWindowM.PrinterLink;
         }
 
-        public void MakeATicket()
+        public async Task<string> MakeATicket()
         {
+            string makingATicketResult = await mainWindowM.MakeATicket();
             TicketClaim = "";
-            mainWindowM.MakeATicket();
+            return makingATicketResult;
         }
 
-        public void ConnectPrinter()
+        public Task<string> ConnectPrinter()
         {
-            mainWindowM.ConnectPrinter();
+            return mainWindowM.ConnectPrinter();
         }
 
-        public void BDrive()
+        public Task<string> BDrive()
         {
-            mainWindowM.BDrive();
+            return mainWindowM.BDrive();
         }
 
-        public void FixARMS()
+        public Task<string> FixARMS()
         {
-            mainWindowM.FixARMS();
+            return mainWindowM.FixARMS();
         }
 
-        public void RemoveChromeCache()
+        public Task<string> RemoveChromeCache()
         {
-            mainWindowM.RemoveChromeCache();
+            return mainWindowM.RemoveChromeCache();
         }
 
-        public void InstallPuntoSwitcher()
+        public Task<string> InstallPuntoSwitcher()
         {
-            mainWindowM.InstallPuntoSwitcher();
+            return mainWindowM.InstallPuntoSwitcher();
         }
     }
 }

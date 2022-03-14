@@ -32,11 +32,11 @@ To check other contibutors commits
 - [ ] Screenshot
 - [ ] Hidden printers checking
 - [ ] Fix too long WMI printers query
-- [ ] Non-modal popup
+- [x] Non-modal popup
 - [ ] Exceptions logic
-- [ ] Progressbar
+- [x] Progressbar
 - [ ] Usage statistics
-- [ ] Instructions page
+- [x] Instructions page
 - [ ] MainWindow decomposition
 - [x] Checking user account existence when copying workspace
 - [x] Punto Switcher installation
@@ -46,6 +46,5 @@ To check other contibutors commits
 
 ### Contributors
 DASaveliev
-NAMihalev
 IADunaev
 SAStorm

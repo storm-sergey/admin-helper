@@ -10,6 +10,7 @@
         Title="Перенос рабочего стола"
         WindowStartupLocation="CenterScreen"
         Height="320" Width="350"
+        Closing="CopyWorkspace_Closing"
         >
     <Window.DataContext>
         <vm:CopyWorkspaceVM/>

@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+        xmlns:busyIndicator="https://github.com/Peoky/BusyIndicator"
         xmlns:local="clr-namespace:AdminHelper"
         xmlns:vm="clr-namespace:AdminHelper.ViewModel"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
@@ -21,155 +22,173 @@
         Title="Помощник пользователя" Height="350" Width="640"
         >
     <Window.DataContext>
-        <vm:MainWindowVM/>
-    </Window.DataContext>
-    <Grid>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
-        <dragablz:TabablzControl x:Name="mainWindow_TabControl"
+            <vm:MainWindowVM/>
+        </Window.DataContext>
+    <Window.Resources>
+        <SolidColorBrush x:Key="IndicatorForeground" Color="#03a9f4" />
+        <SolidColorBrush x:Key="IndicatorBackground" Color="WhiteSmoke" />
+    </Window.Resources>
+    <busyIndicator:BusyMask 
+        x:Name="BusyIndicator"
+        IsBusy="False"
+        IndicatorType="Ring"
+        BusyContent="Выполнение..."
+        >
+        <Grid x:Name="Grid"
+          IsEnabled="{Binding GridIsEnabled,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+          Opacity="{Binding GridOpacity,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
+          >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <dragablz:TabablzControl x:Name="mainWindow_TabControl"
                                  Grid.Row="0"
                                  Grid.Column="0"
                                  SelectionChanged="TabablzControl_SelectionChanged">
-            <dragablz:TabablzControl.InterTabController>
-                <dragablz:InterTabController/>
-            </dragablz:TabablzControl.InterTabController>
-            <TabItem x:Name="FastFix"
+                <dragablz:TabablzControl.InterTabController>
+                    <dragablz:InterTabController/>
+                </dragablz:TabablzControl.InterTabController>
+                <TabItem x:Name="FastFix"
                      Height="36"
                      Width="130"
                      Header="Быстрая помощь">
-                <Grid Margin="10">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="200"/>
-                        <ColumnDefinition Width="200"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <GroupBox Grid.Column="0"
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <GroupBox Grid.Column="0"
                               Grid.Row="0"
                               Style="{DynamicResource MaterialDesignCardGroupBox}"
                               materialDesign:ColorZoneAssist.Mode="Custom"
                               materialDesign:ColorZoneAssist.Background="White"
                               materialDesign:ColorZoneAssist.Foreground="White"
                               Margin="5">
-                        <GroupBox.Header>
-                            <Label>
-                                <TextBlock Text="Эникей"/>
-                            </Label>
-                        </GroupBox.Header>
-                        <StackPanel>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                            <GroupBox.Header>
+                                <Label>
+                                    <TextBlock Text="Эникей"/>
+                                </Label>
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 FontFamily="{materialDesign:MaterialDesignFont}"
                                 TextElement.FontSize="12"
                                 Click="Button_Show_Computer_Name_And_IP"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Имя компьютера и IP"/>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 FontFamily="{materialDesign:MaterialDesignFont}"
                                 TextElement.FontSize="12"
                                 Click="Button_Redirect_To_Connect_Printer"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Подключить принтер"/>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Click="Button_CopyDesktop_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Перенести рабочий стол"/>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Click="Button_B_Drive_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Подключить диск B"/>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Grid.Column="1"
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Grid.Column="1"
                               Grid.Row="0"
                               Style="{DynamicResource MaterialDesignCardGroupBox}"
                               materialDesign:ColorZoneAssist.Mode="Custom"
                               materialDesign:ColorZoneAssist.Background="White"
                               materialDesign:ColorZoneAssist.Foreground="White"
                               Margin="5">
-                        <GroupBox.Header>
-                            <Label>
-                                <TextBlock Text="Сервисы Рольф"/>
-                            </Label>
-                        </GroupBox.Header>
-                        <StackPanel>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                            <GroupBox.Header>
+                                <Label>
+                                    <TextBlock Text="Сервисы Рольф"/>
+                                </Label>
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Click="Button_Fix_ARMS_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Белый экран в ARMS"/>
-                        </StackPanel>
-                    </GroupBox>
-                    <GroupBox Grid.Column="2"
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                TextElement.FontSize="12"
+                                Click="Button_Test"
+                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                Content="Квадраты в UNIPLAN"/>
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Grid.Column="2"
                               Grid.Row="0"
                               Style="{DynamicResource MaterialDesignCardGroupBox}"
                               materialDesign:ColorZoneAssist.Mode="Custom"
                               materialDesign:ColorZoneAssist.Background="White"
                               materialDesign:ColorZoneAssist.Foreground="White"
                               Margin="5">
-                        <GroupBox.Header>
-                            <Label>
-                                <TextBlock Text="Программное обеспечение"/>
-                            </Label>
-                        </GroupBox.Header>
-                        <StackPanel>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                            <GroupBox.Header>
+                                <Label>
+                                    <TextBlock Text="Программное обеспечение"/>
+                                </Label>
+                            </GroupBox.Header>
+                            <StackPanel>
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Click="Button_Del_Chrome_Cache_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Очистить кэш Chrome"/>
-                            <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Padding="0"
                                 Click="Button_Install_Punto_Switcher"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Установить Punto Switcher"/>
-                        </StackPanel>
-                    </GroupBox>
-                    <StackPanel Grid.Row="2"
+                            </StackPanel>
+                        </GroupBox>
+                        <StackPanel Grid.Row="2"
                                 Grid.Column="0"
                                 MinHeight="100"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="MakeATicket"
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="MakeATicket"
                      Height="36"
                      Width="130"
                      Header="Создать заявку">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="20"/>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <ComboBox Grid.Row="0"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="20"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <ComboBox Grid.Row="0"
                               Grid.Column="1"
                               Margin="0 20 20 10"
                               Name="Dealerships"
                               ItemsSource="{Binding Dealerships}"
                               SelectedItem="{Binding UserDealership,UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Grid.Row="1"
+                        <TextBlock Grid.Row="1"
                                Grid.Column="1"
                                Margin="0 10 2 2"
                                HorizontalAlignment="Left"
                                Text="Комментарий:"/>
-                    <TextBox Grid.Row="2"
+                        <TextBox Grid.Row="2"
                              Grid.Column="1"
                              Margin="1 0 23 0"
                              AcceptsReturn="True"
@@ -179,40 +198,40 @@
                              MinHeight="140"
                              MaxHeight="300"
                              Text="{Binding TicketClaim,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                    <Button x:Name="MakeTicket"
+                        <Button x:Name="MakeTicket"
                             TextElement.Foreground="Black"
                             Grid.Row="3"
                             Grid.Column="1"
                             Margin="0 -4 21 10"
                             Click="Button_Make_A_Ticket"
                             Content="Создать заявку"/>
-                    <StackPanel Grid.Row="4"
+                        <StackPanel Grid.Row="4"
                                 Grid.Column="1"
                                 Height="100"/>
-                </Grid>
-            </TabItem>
-            <TabItem x:Name="Printers"
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Printers"
                      Height="36"
                      Width="130"
                      Header="Принтеры">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="0"
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
                                Grid.Column="0"
                                Margin="10 15 10 0"
                                HorizontalAlignment="Left"
                                VerticalAlignment="Center"
                                Text="Принтеры:"/>
-                    <ListBox Grid.Row="1"
+                        <ListBox Grid.Row="1"
                              Grid.Column="0"
                              Height="150"
                              MaxHeight="170"
@@ -225,7 +244,7 @@
                              MouseDoubleClick="PrinterDescriptions_MouseDoubleClick"
                              ItemsSource="{Binding Printers}"
                              SelectedItem="{Binding SelectedPrinter,UpdateSourceTrigger=PropertyChanged}"/>
-                    <TextBlock Grid.Row="2"
+                        <TextBlock Grid.Row="2"
                                Grid.Column="0"
                                Margin="15 5 0 0">
                         <Hyperlink NavigateUri="{Binding PrinterLink,UpdateSourceTrigger=PropertyChanged}">
@@ -244,8 +263,88 @@
                         <StackPanel Grid.Row="4"
                                 Grid.Column="1"
                                 Height="1000"/>
-                </Grid>
-            </TabItem>
-        </dragablz:TabablzControl>
-    </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem x:Name="Instructions"
+                     Height="36"
+                     Width="130"
+                     Header="Инструкции">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0"
+                               Grid.Column="0"
+                               Margin="10 15 10 0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Рольф:"/>
+                        <TextBlock Grid.Row="1"
+                               Grid.Column="0"
+                               Margin="15 5 0 0">
+                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://dp-wiki/index.php/%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F">
+                                <TextBlock Text="Инструкции к системам Рольф"/>
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Grid.Row="2"
+                               Grid.Column="0"
+                               Margin="15 5 0 0">
+                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="https://soft.isb.rolf.ru/qp/load/Rolf_remote_access.pdf">
+                                <TextBlock Text="Инструкция по удаленному доступу"/>
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Grid.Row="3"
+                               Grid.Column="0"
+                               Margin="10 15 10 0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Прочее:"/>
+                        <TextBlock Grid.Row="4"
+                               Grid.Column="0"
+                               Margin="15 5 0 0">
+                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://dp-wiki/index.php/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D1%8E_%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0_%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%BE%D0%B9_%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B8">
+                                <TextBlock Text="Инструкция ЭЦП для Диадок и Экстерн"/>
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Grid.Row="5"
+                               Grid.Column="0"
+                               Margin="15 5 0 0">
+                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://myrolf/group/rolf/sotrudniku/instrukcii">
+                                <TextBlock Text="ССД, 1С Документооборот, Кассы, Мой Рольф, ЭЦП Диадок, ЭПТС"/>
+                            </Hyperlink>
+                        </TextBlock>
+                        <TextBlock Grid.Row="6"
+                               Grid.Column="0"
+                               Margin="10 15 10 0"
+                               HorizontalAlignment="Left"
+                               VerticalAlignment="Center"
+                               Text="Корпоративная безопасность:"/>
+                        <TextBlock Grid.Row="7"
+                               Grid.Column="0"
+                               Margin="15 5 0 0">
+                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://myrolf/group/rolf/sb_dajdzest">
+                                <TextBlock Text="Дайджесты и тесты Департамента Корпоративной Безопасности  "/>
+                            </Hyperlink>
+                        </TextBlock>
+                        <StackPanel Grid.Row="10"
+                                Grid.Column="1"
+                                Height="1000"/>
+                    </Grid>
+                </TabItem>
+            </dragablz:TabablzControl>
+        </Grid>
+    </busyIndicator:BusyMask>
 </Window>

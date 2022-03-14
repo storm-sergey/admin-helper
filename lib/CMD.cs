@@ -48,10 +48,11 @@ namespace AdminHelper.lib
                 {
                     output.Add(cmd.StandardOutput.ReadLine());
                 }
-                while (cmd.StandardError.Peek() > -1)
-                {
-                    output.Add(cmd.StandardError.ReadLine());
-                }
+                // TODO: program error
+                //while (cmd.StandardError.Peek() > -1)
+                //{
+                //    output.Add(cmd.StandardError.ReadLine());
+                //}
             }
             return output;
         }

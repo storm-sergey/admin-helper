@@ -12,6 +12,7 @@
         SizeToContent="WidthAndHeight"
         WindowStyle="None"
         WindowStartupLocation="CenterScreen"
+        Closing="NonModalMessage_Closing"
         >
     <Grid>
         <Grid.ColumnDefinitions>

@@ -6,6 +6,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AdminHelper.lib;
 using static AdminHelper.Globals;
 using AdminHelper.View;
+using System.Windows.Controls;
 
 namespace AdminHelper.Model
 {
@@ -19,13 +20,18 @@ namespace AdminHelper.Model
         public readonly string AppDataLocalTempPath;
         public ObservableCollection<string> Dealerships;
         public ObservableCollection<string> Printers;
+        public double GridOpacity;
+        public bool GridIsEnabled;
         public string TicketClaim;
         public string UserDealership;
         public string SelectedPrinter;
         public string PrinterLink;
+        
 
         public MainWindowM()
         {
+            GridIsEnabled = true;
+            GridOpacity = 1;
             BDriveScript = Properties.Resources.B_Drive_bat;
             ARMSFix = Properties.Resources.ARMS_Fix_reg;
             D_Program_Files = @"D:\Program Files";
@@ -42,13 +48,12 @@ namespace AdminHelper.Model
             Task.Run(() => GetPrinterNamesDescriptions(Printers));
         }
 
-        public void FixARMS()
+        public async Task<string> FixARMS()
         {
             try
             {
-                Regedit.RunRegedit(ARMSFix);
-                NonModalMessage message = new NonModalMessage("Перезапустите Internet Explorer");
-                message.Show();
+                await Task.Run(() => Regedit.RunRegedit(ARMSFix));
+                return "Перезапустите Internet Explorer";
             }
             catch
             {
@@ -56,13 +61,12 @@ namespace AdminHelper.Model
             }
         }
 
-        public void BDrive()
+        public async Task<string> BDrive()
         {
             try
             {
-                CMD.Process(BDriveScript);
-                NonModalMessage message = new NonModalMessage("Диск B подключен");
-                message.Show();
+                await Task.Run(() => CMD.Process(BDriveScript));
+                return "Диск B подключен";
             }
             catch
             {
@@ -70,13 +74,12 @@ namespace AdminHelper.Model
             }
         }
 
-        public void RemoveChromeCache()
+        public async Task<string> RemoveChromeCache()
         {
             try
             {
-                Files.DeleteFilesInDirectory(ChromeCachePath);
-                NonModalMessage message = new NonModalMessage("Кэш Google Chrome очищен");
-                message.Show();
+                await Task.Run(() => Files.DeleteFilesInDirectory(ChromeCachePath));
+                return "Кэш Google Chrome очищен";
             }
             catch
             {
@@ -84,19 +87,19 @@ namespace AdminHelper.Model
             }
         }
 
-        public void MakeATicket()
+        // TODO: Ticket reason would be here
+        public async Task<string> MakeATicket()
         {
-            string mockTicketReason = "Sent_by_AdminHelper";
-            _MakeATicket(mockTicketReason, TicketClaim);
-            NonModalMessage message = new NonModalMessage("Заявка отправлена");
-            message.Show();
+            string mockTicketReason = "Заявка пользователя";
+            await Task.Run(() => _MakeATicket(mockTicketReason, TicketClaim));
+            return "Заявка отправлена";
         }
 
         private void _MakeATicket(string ticketReason = "", string ticketClaim = "")
         {
             try
             {
-                string subject = $"Администраторам_#{GetDillershipTitle()}: {ticketReason}";
+                string subject = $"ДЦ#{GetDillershipTitle()}: {ticketReason}";
                 string htmlBody =
                     $"Login: {UserCredentials.UserName}<br>" +
                     $"Computer: {UserCredentials.MachineName}<br>" +
@@ -184,7 +187,12 @@ namespace AdminHelper.Model
             }
         }
 
-        public void ConnectPrinter()
+        public async Task<string> ConnectPrinter()
+        {
+            return await Task.Run(() => _ConnectPrinter());
+        }
+
+        private string _ConnectPrinter()
         {
             if (SelectedPrinter != "")
             {
@@ -194,16 +202,21 @@ namespace AdminHelper.Model
                 {
                     lib.Printers.ConnectPrinter(SelectedPrinter);
                 }
-                NonModalMessage message = new NonModalMessage("Принтер подключен");
-                message.Show();
+                return "Принтер подключен";
             }
+            return "";
         }
 
-        public void InstallPuntoSwitcher()
+        public async Task<string> InstallPuntoSwitcher()
+        {
+            return await Task.Run(() => _InstallPuntoSwitcher());
+        }
+
+        private string _InstallPuntoSwitcher()
         {
             try
             {
-                string source = @"\\1\Distr\Punto Switcher";
+                string source = @"\\1\IT_Distrib\Punto Switcher";
                 string shortcut = "Punto Switcher.lnk";
                 if (!Files.CheckDirectoryExists(source))
                 {
@@ -218,12 +231,13 @@ namespace AdminHelper.Model
                     bool overwriteFile = true;
                     Files.CopyFile(shortcut, destination, UserCredentials.LocalDesktop, overwriteFile);
                     Files.RunFile(destination, shortcut);
-                    NonModalMessage message = new NonModalMessage("Punto Switcher установлен");
-                    message.Show();
+                    return "Punto Switcher установлен";
                 }
                 else
                 {
+                    // TODO: exception remote report
                     new Exception("Не удалось установить Punto Switcher на Ваш компьютер. Обратитесь к системным администраторам.");
+                    return "Ошибка установки PuntoSwitcher";
                 }
             }
             catch (Exception ex)
