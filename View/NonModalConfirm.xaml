@@ -1,0 +1,60 @@
+﻿<Window x:Class="AdminHelper.View.NonModalConfirm"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:AdminHelper"
+        xmlns:vm="clr-namespace:AdminHelper.ViewModel"
+        mc:Ignorable="d"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="(•‿•)                            "
+        x:Name="NonModalConfirmWindow"
+        SizeToContent="WidthAndHeight"
+        WindowStyle="None"
+        WindowStartupLocation="CenterScreen"
+        Closing="NonModalMessage_Closing"
+        >
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock 
+                Style="{DynamicResource MaterialDesignTextBlock}"
+                HorizontalAlignment="Center"
+                Margin="15"
+                x:Name="NonModalConfirmText"
+                Text="Пустой вызов NonModalConfirm"/>
+            <StackPanel
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                >
+                <Button
+                    VerticalAlignment="Center"
+                    TextElement.FontSize="14"
+                    TextElement.Foreground="Black"
+                    Background="LightSkyBlue"
+                    Content="Да"
+                    Click="Button_Click_Accept"
+                    Padding="0"
+                    Margin="10 15 10 15"
+                    Width="80"
+                    Height="30"/>
+                <Button 
+                    VerticalAlignment="Center"
+                    TextElement.FontSize="14"
+                    TextElement.Foreground="Black"
+                    Background="White"
+                    Content="Нет"
+                    Click="Button_Click_Cancel"
+                    Padding="0"
+                    Margin="10 15 10 15"
+                    Width="80"
+                    Height="30"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</Window>
