@@ -17,24 +17,29 @@ namespace AdminHelper.lib
             return Dns.GetHostName();
         }
 
-
         /// <summary>
-        /// Often happen that users claims Ethernet tray icon is showing disconnected although the connection is fine
-        /// I think this method can get the same falsed information
-        /// Use Dns.GetHostName() or Subnet.GetLocalhostName() to check commutation
+        /// Using Dns.GetHostName() or Subnet.GetLocalhostName() as a net checking way donesn't work...
+        /// Indicates whether any network connection is available.
         /// </summary>
         /// <returns> Newtwork availability flag </returns>
         public static bool IsNetworkAvailable()
         {
-            try
-            {
-                return NetworkInterface.GetIsNetworkAvailable();
-            }
-            catch
-            {
+            if (!NetworkInterface.GetIsNetworkAvailable())
                 return false;
+
+            foreach (NetworkInterface netInterface in NetworkInterface.GetAllNetworkInterfaces())
+            {
+                if ((netInterface.OperationalStatus != OperationalStatus.Up)
+                ||  (netInterface.NetworkInterfaceType == NetworkInterfaceType.Loopback)
+                ||  (netInterface.NetworkInterfaceType == NetworkInterfaceType.Tunnel)
+                ||  (netInterface.Description.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0)
+                ||  (netInterface.Name.IndexOf("virtual", StringComparison.OrdinalIgnoreCase) >= 0)
+                ||  (netInterface.Description.Equals("Microsoft Loopback Adapter", StringComparison.OrdinalIgnoreCase)))
+                    continue;
+
+                return true;
             }
-            
+            return false;
         }
 
         /// <summary>
