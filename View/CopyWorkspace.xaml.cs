@@ -3,10 +3,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using AdminHelper.ViewModel;
 
-// Автопоиск
-// Чистка темпа
-// Квадратики Пронто
-// 
 namespace AdminHelper.View
 {
     public partial class CopyWorkspace : Window
@@ -16,7 +12,7 @@ namespace AdminHelper.View
 
         public CopyWorkspace(Action unblockMainWindow)
         {
-            this.UnblockMainWindow = unblockMainWindow;
+            UnblockMainWindow = unblockMainWindow;
             InitializeComponent();
             copyWorkspaceVM = new CopyWorkspaceVM();
             GroupBoxHeaderLabelButton.Content = $"Пользователь: {copyWorkspaceVM.UserName}";
