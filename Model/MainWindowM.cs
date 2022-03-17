@@ -17,14 +17,16 @@ namespace AdminHelper.Model
     {
         static MainWindowM() {}
         // app
+        private readonly string ServiceDeskContacts;
         private readonly String ARMSFix;
         private readonly string BDriveScript;
         private readonly string ClearTempsScript;
-        private readonly string SubnetsDealerships;
         public readonly string D_Program_Files;
         public readonly string ChromeCachePath;
         public readonly string AppDataLocalTempPath;
-        public readonly string UserDealership;
+        public readonly byte[] SubnetsDealershipsLocal;
+        private readonly JsonTreeNode SubnetsDealershipsJson;
+        public string UserDealership;
         public ObservableCollection<string> Dealerships;
         public double GridOpacity;
         public bool GridIsEnabled;
@@ -38,8 +40,9 @@ namespace AdminHelper.Model
         public Dictionary<string, string> PrintersNumberName;
         public ObservableCollection<string> PrintserverPrinters;
         public ObservableCollection<LocalPrinter> LocalPrinters;
-        public readonly string PrintServer;
-        public readonly string PrinterNotFound;
+        public readonly string PrinterNotFoundMessage;
+        public readonly string PrintServerNotFoundMessage;
+        public string PrintServer;
         public string PrinterLink;
         public string NewPrinterNumber;
         public bool IsNewPrinterFound;
@@ -69,11 +72,16 @@ namespace AdminHelper.Model
             D_Program_Files = @"D:\Program Files";
             ChromeCachePath = $@"D:\Users\{UserCredentials.UserName}\AppData\Local\Google\Chrome\User Data\Default\Cache";
             AppDataLocalTempPath = $@"D:\Users\{UserCredentials.UserName}\AppData\Local\Temp";
+            ServiceDeskContacts = "\n\n"
+                        + $"Телефон: 52222\n"
+                        + "                                            \n"
+                        + $"Почта: sd@rolf.ru\n";
             // TODO: test without internter connection
             // Dealership
-            SubnetsDealerships = Properties.Resources.Subnets_19_03_2022;
-            UserDealership = GetUserDealership();
+            SubnetsDealershipsLocal = Properties.Resources.Subnets;
+            SubnetsDealershipsJson = GetRoot("Подсети", SUBNETS_ENDPOINT, SUBNETS_FILE, SubnetsDealershipsLocal).GetAwaiter().GetResult();
             Dealerships = GetDealerships();
+            UserDealership = GetUserDealership();
             TicketDialershipIndex = GetTicketDillershipIndex();
             // Printers
             PrintServersLocal = Properties.Resources.Print_servers;
@@ -81,17 +89,18 @@ namespace AdminHelper.Model
             PrintServersJson = GetRoot("Принтсерверы", PRINT_SERVERS_ENDPOINT, PRINT_SERVERS_FILE, PrintServersLocal).GetAwaiter().GetResult();
             PrintersMapJson = GetRoot("Принтеры", PRINTERS_ENDPOINT, PRINTERS_FILE, PrintersMapLocal).GetAwaiter().GetResult();
             PrintServers = Format_PrintServers(GetPrintServersFromJSON(PrintServersJson.GetChildrenEnumerator()));
-            PrintServer = PrintServers[UserDealership];
-            //LocalPrinters = new ObservableCollection<LocalPrinter>();
+            PrintServer = GetPrintServer(PrintServers, UserDealership);
             NewPrinterNumberValidation = new Regex(@"^[0-9]{0,3}$");
-            PrinterNotFound = "Принтер не найден";
+            PrinterNotFoundMessage = "Принтер не найден";
+            PrintServerNotFoundMessage = "Принтсервер не задан";
             IsNewPrinterFound = false;
             PrinterLink_Valid = System.Windows.Visibility.Hidden;
             PrinterLink_Unvalid = System.Windows.Visibility.Collapsed;
-            PrintersNumberName = new Dictionary<string, string>();
             LocalPrinters = GetLocalInstalledPrinterNames();
             PrintserverPrinters = new ObservableCollection<string>();
-            Task.Run(() => GetServerPrinterNames(PrintserverPrinters, PrintServer));
+            PrintserverPrinters.CollectionChanged += ServerPrinters_AddingNewPrinter;
+            PrintersNumberName = new Dictionary<string, string>();
+            Task.Run(() => GetServerPrintersNames(PrintserverPrinters, PrintServer));
             // Ticket theme
             IsTicketClaimFilled = false;
             TicketClaim = "";
@@ -108,6 +117,22 @@ namespace AdminHelper.Model
         public static MainWindowM Singleton
         {
             get => singleton;
+        }
+
+        public void UpdateDialershipIndex(int value)
+        {
+            TicketDialershipIndex = value;
+            UserDealership = Dealerships[value];
+            UpdatePrintersPanelSettings();
+        }
+
+        private void UpdatePrintersPanelSettings()
+        {
+            PrintServer = GetPrintServer(PrintServers, UserDealership);
+            PrintserverPrinters.Clear();
+            PrintersNumberName.Clear();
+            Task.Run(() => GetServerPrintersNames(PrintserverPrinters, PrintServer));
+            
         }
 
         public string GetTicketClaimByTheme(string ticketTheme)
@@ -359,23 +384,25 @@ namespace AdminHelper.Model
             }
         }
 
-        // Subnet string format: "10.10.192.0/18 Location\n"
         public ObservableCollection<string> GetDealerships()
         {
             try
             {
                 ObservableCollection<string> dealerships = new ObservableCollection<string>();
                 HashSet<string> singlesDealerships = new HashSet<string>();
-                foreach (string subnetDC in SubnetsDealerships.Split('\n'))
+                HashSet<JsonTreeNode>.Enumerator subnets = SubnetsDealershipsJson.GetChildrenEnumerator();
+                while (subnets.MoveNext())
                 {
-                    int dealershipTitleStart = subnetDC.IndexOf(" ") + 1;
-                    if (subnetDC[dealershipTitleStart] != '*')
+                    string subnet = subnets.Current.GetData();
+                    string dealership = subnets.Current.GetChildData();
+                    
+                    if (dealership[0] != '*')
                     {
-                        string DC = subnetDC.Substring(dealershipTitleStart, subnetDC.Length - 1 - dealershipTitleStart).ToUpperInvariant();
-
-                        singlesDealerships.Add(DC);
+                        singlesDealerships.Add(dealership.ToUpperInvariant());
                     }
                 }
+
+                singlesDealerships.Remove("НЕ ОПРЕДЕЛЕН");
                 foreach (string dealership in singlesDealerships)
                 {
                     dealerships.Add(dealership);
@@ -391,18 +418,28 @@ namespace AdminHelper.Model
 
         private string GetUserDealership()
         {
-            foreach (string subnetDC in SubnetsDealerships.Split('\n'))
+            try
             {
-                int subnetCidrLength = subnetDC.IndexOf(" ");
-                string subnetCidr = subnetDC.Substring(0, subnetCidrLength);
-                if (Subnet.IsRankedBySubnet(Subnet.GetLocalhostIP(), subnetCidr))
+                HashSet<JsonTreeNode>.Enumerator subnets = SubnetsDealershipsJson.GetChildrenEnumerator();
+                while (subnets.MoveNext())
                 {
-                    // from CIDR to \n
-                    string title = subnetDC.Substring(subnetCidrLength + 1, subnetDC.Length - subnetCidrLength - 2);
-                    return title.ToUpper();
+                    string subnetCidr = subnets.Current.GetData();
+                    if (Subnet.IsRankedBySubnet(Subnet.GetLocalhostIP(), subnetCidr))
+                    {
+                        // from CIDR to \n
+                        string dealershipTitle = subnets.Current.GetChildData();
+                        return dealershipTitle.ToUpper();
+                    }
                 }
+                AppException.Handle(new Exception("Dealership title is not define"));
+                return "Не определена";
             }
-            throw new Exception("Dealership title is not define");
+            catch (Exception ex)
+            {
+                AppException.Handle(ex);
+                return "Не определена";
+            }
+
         }
 
         private int GetTicketDillershipIndex()
@@ -458,9 +495,13 @@ namespace AdminHelper.Model
             }
         }
 
-        public string GetPrintServerName()
+        public string GetPrintServer(Dictionary<string, string> printServers, string userDealerShip)
         {
-            return PrintServers[UserDealership];
+            if (printServers.ContainsKey(userDealerShip))
+            {
+                return printServers[userDealerShip];
+            }
+            return null;
         }
 
         public bool ValidateNewPrinterNumber(string printerName)
@@ -470,6 +511,12 @@ namespace AdminHelper.Model
 
         public string FindPrinterByNumber(string number)
         {
+            if (PrintServer == null)
+            {
+                IsNewPrinterFound = false;
+                return PrintServerNotFoundMessage;
+            }
+
             if (!String.IsNullOrEmpty(number)
             && PrintersNumberName.ContainsKey(number))
             {
@@ -493,7 +540,7 @@ namespace AdminHelper.Model
                     }
                 }
                 IsNewPrinterFound = false;
-                return PrinterNotFound;
+                return PrinterNotFoundMessage;
             }
         }
 
@@ -577,12 +624,11 @@ namespace AdminHelper.Model
             }
         }
 
-        public async Task GetServerPrinterNames(ObservableCollection<string> printers, string host)
+        public async Task GetServerPrintersNames(ObservableCollection<string> printers, string host)
         {
             try
             {
                 string prefix = UserCredentials.LocationPrefix;
-                printers.CollectionChanged += ServerPrinters_AddingNewPrinter;
                 await Printers.FastGetListOfPrinters(host, prefix, printers);
 
                 // TODO: Fix memory leak with GetListOfPrinters
@@ -736,6 +782,11 @@ namespace AdminHelper.Model
             {
                 return "Отсутствует интернет подключение";
             }
+        }
+
+        public string GetServiceDeskContacts()
+        {
+            return ServiceDeskContacts;
         }
     }
 
