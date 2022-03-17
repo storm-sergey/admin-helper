@@ -11,7 +11,6 @@ namespace AdminHelper.ViewModel
     class MainWindowVM : ViewModelBase
     {
         private readonly MainWindowM mainWindowM;
-        public MainWindow MainWindowV;
 
         public MainWindowVM()
         {
@@ -141,10 +140,15 @@ namespace AdminHelper.ViewModel
             get => mainWindowM.TicketDialershipIndex;
             set
             {
-                mainWindowM.TicketDialershipIndex = value;
+                mainWindowM.UpdateDialershipIndex(value);
                 OnPropertyChange("UserDealership");
             }
         }
+
+        //public void ComboBox_UserDealership_SelectionChanged()
+        //{
+        //    mainWindow.UpdatePrinterMenu();
+        //}
 
         public string UserDealershipName
         {
@@ -216,6 +220,11 @@ namespace AdminHelper.ViewModel
         public string ComputerNameAndIp
         {
             get => mainWindowM.GetComputerNameAndIp();
+        }
+
+        public string ServiceDeskContacts
+        {
+            get => mainWindowM.GetServiceDeskContacts();
         }
 
         public async Task<string> MakeATicket()
