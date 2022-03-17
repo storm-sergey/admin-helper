@@ -141,6 +141,12 @@
                             </GroupBox.Header>
                             <StackPanel>
                                 <Button
+                                    Click="Button_SDContacts_Click"
+                                    Content="Контакты Сервис Деск"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
                                     Click="Button_Fix_ARMS_Click"
                                     Content="Белый экран в ARMS"
                                     Style="{DynamicResource MaterialDesignFlatButton}"
@@ -161,7 +167,8 @@
                                     VerticalAlignment="Center"
                                     VerticalContentAlignment="Stretch"
                                     Background="Transparent"
-                                    FontWeight="Medium">
+                                    FontWeight="Medium"
+                                    Visibility="Collapsed">
                                     <Expander.Header>
                                         <StackPanel>
                                             <TextBlock
@@ -223,7 +230,8 @@
                                     Content="Установить 7zip 19"
                                     Style="{DynamicResource MaterialDesignFlatButton}"
                                     TextElement.FontSize="12"
-                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                    Visibility="Collapsed" />
                             </StackPanel>
                         </GroupBox>
                         <StackPanel
@@ -279,7 +287,7 @@
                             Margin="0,20,20,10"
                             HorizontalAlignment="Left"
                             ItemsSource="{Binding Dealerships}"
-                            SelectedIndex="{Binding UserDealership, UpdateSourceTrigger=PropertyChanged}" />
+                            SelectedIndex="{Binding UserDealership, UpdateSourceTrigger=PropertyChanged}"/>
                         <Menu
                             Name="TicketThemeSelect_Menu"
                             Grid.Row="1"
