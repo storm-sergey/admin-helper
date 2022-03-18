@@ -23,7 +23,7 @@ namespace AdminHelper.Model
         public double GridOpacity;
         public bool GridIsEnabled;
         public string TicketClaim;
-        public string UserDealership;
+        public int UserDealership;
         public string SelectedPrinter;
         public string PrinterLink;
         
@@ -39,9 +39,9 @@ namespace AdminHelper.Model
             AppDataLocalTempPath = @"D:\Users\SAStorm\AppData\Local\Temp";
             // TODO: test without internter connection
             // Dealership
-            SubnetsDealerships = Properties.Resources.Subnets_12_12_2021;
+            SubnetsDealerships = Properties.Resources.Subnets_19_03_2022;
             Dealerships = GetDealerships();
-            UserDealership = GetDillershipTitle();
+            UserDealership = GetDillershipIndex();
             // Printers
             Printers = new ObservableCollection<string>();
             SelectedPrinter = "";
@@ -99,7 +99,7 @@ namespace AdminHelper.Model
         {
             try
             {
-                string subject = $"ДЦ#{GetDillershipTitle()}: {ticketReason}";
+                string subject = $"ДЦ#{UserDealership}: {ticketReason}";
                 string htmlBody =
                     $"Login: {UserCredentials.UserName}<br>" +
                     $"Computer: {UserCredentials.MachineName}<br>" +
@@ -144,26 +144,22 @@ namespace AdminHelper.Model
 
         }
 
-        public string GetDillershipTitle()
+        public int GetDillershipIndex()
         {
-            try
+
+            foreach (string subnetDC in SubnetsDealerships.Split('\n'))
             {
-                foreach (string subnetDC in SubnetsDealerships.Split('\n'))
+                int subnetCidrLength = subnetDC.IndexOf(" ");
+                string subnetCidr = subnetDC.Substring(0, subnetCidrLength);
+                if (Subnet.IsRankedBySubnet(Subnet.GetLocalhostIP(), subnetCidr))
                 {
-                    int subnetCidrLength = subnetDC.IndexOf(" ");
-                    string subnetCidr = subnetDC.Substring(0, subnetCidrLength);
-                    if (Subnet.IsRankedBySubnet(Subnet.GetLocalhostIP(), subnetCidr))
-                    {
-                        // from CIDR to \n
-                        return subnetDC.Substring(subnetCidrLength + 1, subnetDC.Length - subnetCidrLength - 2);
-                    }
+                    // from CIDR to \n
+                    string title = subnetDC.Substring(subnetCidrLength + 1, subnetDC.Length - subnetCidrLength - 2);
+                    int index = Dealerships.IndexOf(title.ToUpper());
+                    return index;
                 }
-                return "ДЦ не определён";
             }
-            catch
-            {
-                return "ДЦ не определён*";
-            }
+            return -1;
         }
 
         public async Task GetPrinterNamesDescriptions(ObservableCollection<string> printers)
@@ -243,6 +239,21 @@ namespace AdminHelper.Model
             catch (Exception ex)
             {
                 throw ex;
+            }
+        }
+
+        public string GetComputerNameAndIp()
+        {
+            if (Subnet.IsNetworkAvailable())
+            {
+                return "\n\n" +
+                       $"имя:  {Subnet.GetLocalhostName()}\n".ToLower() +
+                       "                                            \n" +
+                       $"ip:  {Subnet.GetLocalhostIP()}\n";
+            }
+            else
+            {
+                return "Отсутствует интернет подключение";
             }
         }
     }

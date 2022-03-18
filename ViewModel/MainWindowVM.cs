@@ -59,7 +59,7 @@ namespace AdminHelper.ViewModel
             get => mainWindowM.Printers;
         }
 
-        public string UserDealership
+        public int UserDealership
         {
             get => mainWindowM.UserDealership;
             set
@@ -84,6 +84,11 @@ namespace AdminHelper.ViewModel
         public string PrinterLink
         {
             get => mainWindowM.PrinterLink;
+        }
+
+        public string ComputerNameAndIp
+        {
+            get => mainWindowM.GetComputerNameAndIp();
         }
 
         public async Task<string> MakeATicket()
