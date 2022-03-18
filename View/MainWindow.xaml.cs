@@ -26,14 +26,29 @@ namespace AdminHelper.View
 
         public MainWindow()
         {
+            if (IsAlreadyRunningApp())
+            {
+                Process.GetCurrentProcess().Kill();
+            }
+
             mainWindowVM = new MainWindowVM();
             DataContext = mainWindowVM;
 
             InitializeComponent();
+            Show();
             MakeTicketMenu();
             MakePrinterMenu();
             MakeTray();
-            Task.Run(() => mainWindowVM.MainWindowV = this);
+
+            ComboBox_UserDealership.SelectionChanged += UpdatePrinterMenu;
+            Hide();
+        }
+
+        private bool IsAlreadyRunningApp()
+        {
+            string assembly = System.Reflection.Assembly.GetEntryAssembly().Location;
+            string fileName = System.IO.Path.GetFileNameWithoutExtension(assembly);
+            return (Process.GetProcessesByName(fileName).Length > 1);
         }
 
         private MenuItem AddMenuItem(MenuItem parent, string item)
@@ -151,6 +166,7 @@ namespace AdminHelper.View
         #region Printer Map Menu
         private void MakePrinterMenu()
         {
+            
             MenuItem rootMenuItem = PrintersSelect_MenuItem_Main;
             HashSet<JsonTreeNode>.Enumerator nodes = mainWindowVM.PrintersMapJson.GetChildrenEnumerator();
             while (nodes.MoveNext())
@@ -224,7 +240,25 @@ namespace AdminHelper.View
             }
         }
 
-
+        public void UpdatePrinterMenu(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                mainWindowVM.NewPrinterNumber = "";
+                PrinterNumber_TextBox.Text = "";
+                MenuItem rootMenuItem = PrintersSelect_MenuItem_Main;
+                rootMenuItem.Items.Clear();
+                MakePrinterMenu();
+                if (rootMenuItem.HasItems)
+                {
+                    rootMenuItem.IsEnabled = true;
+                }
+            }
+            catch (Exception ex)
+            {
+                AppException.Handle("Printers map menu updating is failed", ex);
+            }
+        }
         #endregion
 
         #region Tray
@@ -258,6 +292,8 @@ namespace AdminHelper.View
             trayMenu.MenuItems.Add("Заявка", (object sender, EventArgs e) => OpenFromTray(MakeATicket));
             trayMenu.MenuItems.Add("Принтеры", (object sender, EventArgs e) => OpenFromTray(Printers));
             trayMenu.MenuItems.Add("Инструкции", (object sender, EventArgs e) => OpenFromTray(Instructions));
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add("Выход", (object sender, EventArgs e) => System.Windows.Application.Current.Shutdown());
 
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
@@ -384,6 +420,19 @@ namespace AdminHelper.View
             LoadingAndMessaging(mainWindowVM.BDrive);
         }
 
+        private void Button_SDContacts_Click(object sender, RoutedEventArgs e)
+        {
+            BlockWindow();
+            string message = mainWindowVM.ServiceDeskContacts;
+            new NonModalMessage(
+                UnblockWindow,
+                message,
+                "Контакты Сервис Деск")
+            {
+                Owner = this
+            }.Show();
+        }
+
         private void Button_Fix_ARMS_Click(object sender, RoutedEventArgs e)
         {
             LoadingAndMessaging(mainWindowVM.FixARMS);
@@ -462,7 +511,5 @@ namespace AdminHelper.View
             await Task.Run(() => System.Threading.Thread.Sleep(2000));
             HideLoading();
         }
-
-
     }
 }
