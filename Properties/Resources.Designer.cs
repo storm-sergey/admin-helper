@@ -91,18 +91,49 @@ namespace AdminHelper.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 205.204.193.0/24 Черная Грязь - на ХОЛДИНГ !
+        ///   Looks up a localized string similar to title temp
+        ///
+        ///DEL /F /S /Q &quot;%USERPROFILE%\Local Settings\Temporary Internet Files\*&quot;
+        ///DEL /F /S /Q &quot;%USERPROFILE%\Local Settings\Temp\*&quot;
+        ///DEL /F /S /Q &quot;%USERPROFILE%\Recent\*&quot;
+        ///DEL /F /S /Q &quot;%USERPROFILE%\Cookies\*&quot;
+        ///DEL /F /S /Q &quot;c:\WINDOWS\Temp\*&quot;
+        ///DEL /F /S /Q &quot;c:\temp\*&quot;
+        ///DEL /F /S /Q &quot;c:\WINDOWS\Prefetch\*&quot;
+        ///DEL /F /S /Q &quot;C:\WINDOWS\system32\config\systemprofile\Local Settings\Temporary Internet Files\*&quot;
+        ///DEL /F /S /Q &quot;C:\WINDOWS\system32\config\systemprofile\Local Settings\Temp\*&quot;
+        ///DEL /F /S /Q &quot;%USER [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string Clear_temps_cmd {
+            get {
+                return ResourceManager.GetString("Clear_temps_cmd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
+        /// </summary>
+        public static System.Drawing.Icon ICON {
+            get {
+                object obj = ResourceManager.GetObject("ICON", resourceCulture);
+                return ((System.Drawing.Icon)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 205.204.193.0/24 Черная Грязь
         ///205.204.207.0/24 ХОЛДИНГ
         ///192.168.117.0/24 ул. Алтуфьевское шоссе, д.31, строение 7, РОЛЬФ-ХОЛДИНГ
         ///192.168.118.0/24 ул. Алтуфьевское шоссе, д.31, строение 7, РОЛЬФ-ХОЛДИНГ
         ///192.168.119.0/24 ул. Алтуфьевское шоссе, д.31, строение 7, РОЛЬФ-ХОЛДИНГ
         ///192.168.210.0/24 *ул. Алтуфьевское шоссе, д.31, строение 1, РОЛЬФ-ХОЛДИНГ -  серверы
         ///192.168.153.0/24 *Сеть между центральным коммутатором и ISA-серверами
-        ///205.204.192.0/24 *сеть в РАЦМ для подключения сервера по прое [rest of string was truncated]&quot;;.
+        ///205.204.192.0/24 *сеть в РАЦМ для подключения сервера по проекту Mazda
+        ///172. [rest of string was truncated]&quot;;.
         /// </summary>
-        public static string Subnets_12_12_2021 {
+        public static string Subnets_19_03_2022 {
             get {
-                return ResourceManager.GetString("Subnets_12_12_2021", resourceCulture);
+                return ResourceManager.GetString("Subnets_19_03_2022", resourceCulture);
             }
         }
     }
