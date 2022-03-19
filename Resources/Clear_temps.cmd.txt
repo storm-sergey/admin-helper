@@ -1,0 +1,38 @@
+title temp
+
+DEL /F /S /Q "%USERPROFILE%\Local Settings\Temporary Internet Files\*"
+DEL /F /S /Q "%USERPROFILE%\Local Settings\Temp\*"
+DEL /F /S /Q "%USERPROFILE%\Recent\*"
+DEL /F /S /Q "%USERPROFILE%\Cookies\*"
+DEL /F /S /Q "c:\WINDOWS\Temp\*"
+DEL /F /S /Q "c:\temp\*"
+DEL /F /S /Q "c:\WINDOWS\Prefetch\*"
+DEL /F /S /Q "C:\WINDOWS\system32\config\systemprofile\Local Settings\Temporary Internet Files\*"
+DEL /F /S /Q "C:\WINDOWS\system32\config\systemprofile\Local Settings\Temp\*"
+DEL /F /S /Q "%USERPROFILE%\Local Settings\Application Data\Sun\Java\Deployment\cache\6.0\*"
+
+rmdir /s /q "%USERPROFILE%\Local Settings\Temporary Internet Files\"
+rmdir /s /q "%USERPROFILE%\Local Settings\Temp\"
+rmdir /s /q "%USERPROFILE%\Recent\"
+rmdir /s /q "%USERPROFILE%\Cookies"
+rmdir /s /q "c:\WINDOWS\Temp\"
+rmdir /s /q "c:\temp\"
+rmdir /s /q "c:\WINDOWS\Prefetch"
+rmdir /s /q "c:\WINDOWS\system32\config\systemprofile\Local Settings\Temporary Internet Files\"
+rmdir /s /q "c:\WINDOWS\system32\config\systemprofile\Local Settings\Temp"
+rmdir /s /q "%USERPROFILE%\Local Settings\Application Data\Sun\Java\Deployment\cache\6.0"
+
+
+mkdir "%USERPROFILE%\Local Settings\Temporary Internet Files\"
+mkdir "%USERPROFILE%\Local Settings\Temp\"
+mkdir "%USERPROFILE%\Recent\"
+mkdir "%USERPROFILE%\Cookies"
+mkdir "c:\WINDOWS\Temp\"
+mkdir "c:\temp\"
+mkdir "c:\WINDOWS\Prefetch"
+mkdir "C:\WINDOWS\system32\config\systemprofile\Local Settings\Temporary Internet Files\"
+mkdir "C:\WINDOWS\system32\config\systemprofile\Local Settings\Temp"
+mkdir "%USERPROFILE%\Local Settings\Application Data\Sun\Java\Deployment\cache\6.0"
+
+
+DEL /F /S /Q "%USERPROFILE%\AppData\Local\Temp\*"

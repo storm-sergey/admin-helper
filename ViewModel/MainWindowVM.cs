@@ -122,5 +122,15 @@ namespace AdminHelper.ViewModel
         {
             return mainWindowM.InstallPuntoSwitcher();
         }
+
+        public Task<string> ClearTemps()
+        {
+            return mainWindowM.ClearTemps();
+        }
+
+        public Task<string> UniplanSquaresFix()
+        {
+            return mainWindowM.UniplanSquaresFix();
+        }
     }
 }

@@ -22,8 +22,8 @@
         Title="Помощник пользователя" Height="350" Width="640"
         >
     <Window.DataContext>
-            <vm:MainWindowVM/>
-        </Window.DataContext>
+        <vm:MainWindowVM/>
+    </Window.DataContext>
     <Window.Resources>
         <SolidColorBrush x:Key="IndicatorForeground" Color="#03a9f4" />
         <SolidColorBrush x:Key="IndicatorBackground" Color="WhiteSmoke" />
@@ -84,13 +84,13 @@
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 FontFamily="{materialDesign:MaterialDesignFont}"
                                 TextElement.FontSize="12"
-                                Click="Button_Show_Computer_Name_And_IP"
+                                Click="Button_ShowComputerNameAndIP_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Имя компьютера и IP"/>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 FontFamily="{materialDesign:MaterialDesignFont}"
                                 TextElement.FontSize="12"
-                                Click="Button_Redirect_To_Connect_Printer"
+                                Click="Button_RedirectToConnectPrinter_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Подключить принтер"/>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -100,7 +100,7 @@
                                 Content="Перенести рабочий стол"/>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
-                                Click="Button_B_Drive_Click"
+                                Click="Button_BDrive_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Подключить диск B"/>
                             </StackPanel>
@@ -125,7 +125,7 @@
                                 Content="Белый экран в ARMS"/>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
-                                Click="Button_Test"
+                                Click="Button_UniplanSquaresFix_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Квадраты в UNIPLAN"/>
                             </StackPanel>
@@ -145,13 +145,19 @@
                             <StackPanel>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
-                                Click="Button_Del_Chrome_Cache_Click"
+                                Padding="0"
+                                Click="Button_ClearTemps_Click"
+                                Style="{DynamicResource MaterialDesignFlatButton}"
+                                Content="Почистить Windows"/>
+                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                                TextElement.FontSize="12"
+                                Click="Button_DelChromeCache_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Очистить кэш Chrome"/>
                                 <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
                                 TextElement.FontSize="12"
                                 Padding="0"
-                                Click="Button_Install_Punto_Switcher"
+                                Click="Button_InstallPuntoSwitcher_Click"
                                 Style="{DynamicResource MaterialDesignFlatButton}"
                                 Content="Установить Punto Switcher"/>
                             </StackPanel>
@@ -177,12 +183,13 @@
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-                        <ComboBox Grid.Row="0"
+                        <ComboBox
+                              Grid.Row="0"
                               Grid.Column="1"
                               Margin="0 20 20 10"
-                              Name="Dealerships"
+                              Name="ComboBox_UserDealership"
                               ItemsSource="{Binding Dealerships}"
-                              SelectedItem="{Binding UserDealership,UpdateSourceTrigger=PropertyChanged}"/>
+                              SelectedIndex="{Binding UserDealership,UpdateSourceTrigger=PropertyChanged}"/>
                         <TextBlock Grid.Row="1"
                                Grid.Column="1"
                                Margin="0 10 2 2"
@@ -203,7 +210,7 @@
                             Grid.Row="3"
                             Grid.Column="1"
                             Margin="0 -4 21 10"
-                            Click="Button_Make_A_Ticket"
+                            Click="Button_MakeATicket_Click"
                             Content="Создать заявку"/>
                         <StackPanel Grid.Row="4"
                                 Grid.Column="1"
@@ -258,7 +265,7 @@
                             Width="115"
                             Height="25"
                             TextElement.Foreground="Black"
-                            Click="Button_Connect_Printer"
+                            Click="Button_ConnectPrinter_Click"
                             Content="Подключить"/>
                         <StackPanel Grid.Row="4"
                                 Grid.Column="1"
@@ -274,7 +281,6 @@
                             <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
                             <RowDefinition Height="*"/>
