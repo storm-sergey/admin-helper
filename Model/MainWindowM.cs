@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using Microsoft.Win32;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using AdminHelper.lib;
 using static AdminHelper.Globals;
@@ -14,6 +15,7 @@ namespace AdminHelper.Model
     {
         private readonly String ARMSFix;
         private readonly string BDriveScript;
+        private readonly string ClearTempsScript;
         private readonly string SubnetsDealerships;
         public readonly string D_Program_Files;
         public readonly string ChromeCachePath;
@@ -34,6 +36,7 @@ namespace AdminHelper.Model
             GridOpacity = 1;
             BDriveScript = Properties.Resources.B_Drive_bat;
             ARMSFix = Properties.Resources.ARMS_Fix_reg;
+            ClearTempsScript = Properties.Resources.Clear_temps_cmd;
             D_Program_Files = @"D:\Program Files";
             ChromeCachePath = @"D:\Users\SAStorm\AppData\Local\Google\Chrome\User Data\Default\Cache";
             AppDataLocalTempPath = @"D:\Users\SAStorm\AppData\Local\Temp";
@@ -84,6 +87,61 @@ namespace AdminHelper.Model
             catch
             {
                 throw new Exception("Chrome cache deleting is failed");
+            }
+        }
+
+        public async Task<string> ClearTemps()
+        {
+            try
+            {
+                await Task.Run(() => _ClearTemps());
+                return "Временные файлы Windows удалены\n" +
+                       "Рекомендуется перезагрузить компьютер";
+            }
+            catch
+            {
+                throw new Exception("Temp cleaning is failed");
+            }
+        }
+
+        private void _ClearTemps()
+        {
+            CMD.Process(ClearTempsScript);
+        }
+
+        public async Task<string> UniplanSquaresFix()
+        {
+            try
+            {
+                await Task.Run(() => _UniplanSquaresFix());
+                return "Необходимо обновить страницу UNIPLAN";
+            }
+            catch
+            {
+                throw new Exception("UNIPLAN fixing is failed");
+            }
+        }
+
+        private void _UniplanSquaresFix()
+        {
+            string path = @"Software\Microsoft\Internet Explorer\BrowserEmulation";
+            string key = "IntranetCompatibilityMode";
+            RegistryKey myKey = Registry.CurrentUser.OpenSubKey(path, true);
+            try
+            {
+                if (myKey != null)
+                {
+                    myKey.SetValue(key, 0, RegistryValueKind.DWord);
+                    myKey.Close();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                myKey.Close();
             }
         }
 
