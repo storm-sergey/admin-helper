@@ -1,19 +1,17 @@
-﻿using System.Threading.Tasks;
-using AdminHelper.Model;
+﻿using AdminHelper.Model;
 
 namespace AdminHelper.ViewModel
 {
     public class NonModalMessageVM : ViewModelBase
     {
-        private readonly NonModalMessageM NonModalMessageM;
+        private readonly NonModalMessageM nonModalMessageM;
 
         public NonModalMessageVM(string message, string title = "")
         {
-            NonModalMessageM = new NonModalMessageM(message, title);
+            nonModalMessageM = new NonModalMessageM(message, title);
         }
 
-
-        public string Title { get => NonModalMessageM.Title; }
-        public string Message { get => NonModalMessageM.Message; }
+        public string Title { get => nonModalMessageM.Title; }
+        public string Message { get => nonModalMessageM.Message; }
     }
 }
