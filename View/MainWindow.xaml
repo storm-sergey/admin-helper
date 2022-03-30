@@ -1,353 +1,750 @@
-﻿<Window x:Class="AdminHelper.View.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-        xmlns:busyIndicator="https://github.com/Peoky/BusyIndicator"
-        xmlns:local="clr-namespace:AdminHelper"
-        xmlns:vm="clr-namespace:AdminHelper.ViewModel"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" 
-        d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
-        WindowStyle="SingleBorderWindow"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="12"
-        TextOptions.TextFormattingMode="Ideal"
-        TextOptions.TextRenderingMode="Auto"        
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}"
-        mc:Ignorable="d"
-        WindowStartupLocation="CenterScreen"
-        Title="Помощник пользователя" Height="350" Width="640"
-        >
+﻿<Window
+    x:Class="AdminHelper.View.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:busyIndicator="https://github.com/Peoky/BusyIndicator"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:AdminHelper.ViewModel"
+    Title="Помощник пользователя"
+    Width="640"
+    Height="350"
+    d:DataContext="{d:DesignInstance Type=vm:MainWindowVM}"
+    Background="{DynamicResource MaterialDesignPaper}"
+    FontFamily="{DynamicResource MaterialDesignFont}"
+    TextElement.FontSize="12"
+    TextElement.FontWeight="Regular"
+    TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+    TextOptions.TextFormattingMode="Ideal"
+    TextOptions.TextRenderingMode="Auto"
+    WindowStartupLocation="CenterScreen"
+    WindowStyle="SingleBorderWindow"
+    mc:Ignorable="d">
     <Window.DataContext>
-        <vm:MainWindowVM/>
+        <vm:MainWindowVM />
     </Window.DataContext>
     <Window.Resources>
         <SolidColorBrush x:Key="IndicatorForeground" Color="#03a9f4" />
         <SolidColorBrush x:Key="IndicatorBackground" Color="WhiteSmoke" />
+        <HierarchicalDataTemplate x:Key="treeViewDataTemplate" ItemsSource="{Binding Children}">
+            <TextBlock Text="{Binding Title}" />
+        </HierarchicalDataTemplate>
+        <CollectionViewSource x:Key="LocalPrinters" Source="{Binding LocalPrinters}" />
     </Window.Resources>
-    <busyIndicator:BusyMask 
+    <busyIndicator:BusyMask
         x:Name="BusyIndicator"
-        IsBusy="False"
-        IndicatorType="Ring"
         BusyContent="Выполнение..."
-        >
-        <Grid x:Name="Grid"
-          IsEnabled="{Binding GridIsEnabled,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-          Opacity="{Binding GridOpacity,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"
-          >
+        IndicatorType="Ring"
+        IsBusy="False">
+        <Grid
+            x:Name="Grid"
+            IsEnabled="{Binding GridIsEnabled, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+            Opacity="{Binding GridOpacity, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
             </Grid.RowDefinitions>
-            <dragablz:TabablzControl x:Name="mainWindow_TabControl"
-                                 Grid.Row="0"
-                                 Grid.Column="0"
-                                 SelectionChanged="TabablzControl_SelectionChanged">
+            <TextBlock
+                Margin="0,-21,0,0"
+                HorizontalAlignment="Right"
+                VerticalAlignment="Top"
+                Panel.ZIndex="100"
+                Opacity=".07"
+                Text="РОЛЬФ"
+                TextBlock.FontFamily="Segoe UI"
+                TextBlock.FontSize="57"
+                TextBlock.FontWeight="Black"
+                TextBlock.Foreground="Red" />
+            <dragablz:TabablzControl
+                x:Name="mainWindow_TabControl"
+                Grid.Row="0"
+                Grid.Column="0">
                 <dragablz:TabablzControl.InterTabController>
-                    <dragablz:InterTabController/>
+                    <dragablz:InterTabController />
                 </dragablz:TabablzControl.InterTabController>
-                <TabItem x:Name="FastFix"
-                     Height="36"
-                     Width="130"
-                     Header="Быстрая помощь">
+                <TabItem
+                    x:Name="FastFix"
+                    Width="130"
+                    Height="36"
+                    Header=" Быстрая помощь">
                     <Grid Margin="10">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="200"/>
-                            <ColumnDefinition Width="200"/>
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="200" />
+                            <ColumnDefinition Width="200" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <GroupBox Grid.Column="0"
-                              Grid.Row="0"
-                              Style="{DynamicResource MaterialDesignCardGroupBox}"
-                              materialDesign:ColorZoneAssist.Mode="Custom"
-                              materialDesign:ColorZoneAssist.Background="White"
-                              materialDesign:ColorZoneAssist.Foreground="White"
-                              Margin="5">
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="5"
+                            materialDesign:ColorZoneAssist.Background="White"
+                            materialDesign:ColorZoneAssist.Foreground="White"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            Style="{DynamicResource MaterialDesignCardGroupBox}">
                             <GroupBox.Header>
                                 <Label>
-                                    <TextBlock Text="Эникей"/>
+                                    <TextBlock Text="Эникей" />
                                 </Label>
                             </GroupBox.Header>
                             <StackPanel>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                FontFamily="{materialDesign:MaterialDesignFont}"
-                                TextElement.FontSize="12"
-                                Click="Button_ShowComputerNameAndIP_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Имя компьютера и IP"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                FontFamily="{materialDesign:MaterialDesignFont}"
-                                TextElement.FontSize="12"
-                                Click="Button_RedirectToConnectPrinter_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Подключить принтер"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Click="Button_CopyDesktop_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Перенести рабочий стол"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Click="Button_BDrive_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Подключить диск B"/>
+                                <Button
+                                    Click="Button_ShowComputerNameAndIP_Click"
+                                    Content="Имя компьютера и IP"
+                                    FontFamily="{materialDesign:MaterialDesignFont}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Click="Button_RedirectToConnectPrinter_Click"
+                                    Content="Подключить принтер"
+                                    FontFamily="{materialDesign:MaterialDesignFont}"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Click="Button_CopyDesktop_Click"
+                                    Content="Перенести рабочий стол"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Click="Button_BDrive_Click"
+                                    Content="Подключить диск B"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Grid.Column="1"
-                              Grid.Row="0"
-                              Style="{DynamicResource MaterialDesignCardGroupBox}"
-                              materialDesign:ColorZoneAssist.Mode="Custom"
-                              materialDesign:ColorZoneAssist.Background="White"
-                              materialDesign:ColorZoneAssist.Foreground="White"
-                              Margin="5">
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Margin="5"
+                            materialDesign:ColorZoneAssist.Background="White"
+                            materialDesign:ColorZoneAssist.Foreground="White"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            Style="{DynamicResource MaterialDesignCardGroupBox}">
                             <GroupBox.Header>
                                 <Label>
-                                    <TextBlock Text="Сервисы Рольф"/>
+                                    <TextBlock Text="Сервисы Рольф" />
                                 </Label>
                             </GroupBox.Header>
                             <StackPanel>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Click="Button_Fix_ARMS_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Белый экран в ARMS"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Click="Button_UniplanSquaresFix_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Квадраты в UNIPLAN"/>
+                                <Button
+                                    Click="Button_Fix_ARMS_Click"
+                                    Content="Белый экран в ARMS"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Click="Button_UniplanSquaresFix_Click"
+                                    Content="Квадраты в UNIPLAN"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontFamily="{DynamicResource MaterialDesignFont}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Expander
+                                    Width="Auto"
+                                    Height="Auto"
+                                    Margin="-7"
+                                    HorizontalAlignment="Stretch"
+                                    VerticalAlignment="Center"
+                                    VerticalContentAlignment="Stretch"
+                                    Background="Transparent"
+                                    FontWeight="Medium">
+                                    <Expander.Header>
+                                        <StackPanel>
+                                            <TextBlock
+                                                HorizontalAlignment="Center"
+                                                FontFamily="{DynamicResource MaterialDesignFont}"
+                                                FontSize="12"
+                                                Text="АС Рольф" />
+                                        </StackPanel>
+                                    </Expander.Header>
+                                    <StackPanel Orientation="Vertical">
+                                        <Button
+                                            Margin="8,0,8,0"
+                                            Click="Button_ACRolf_DisplayOfGoodsMovementFix_Click"
+                                            Content="Расход"
+                                            Style="{DynamicResource MaterialDesignFlatButton}"
+                                            TextElement.FontSize="12"
+                                            TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                    </StackPanel>
+                                </Expander>
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Grid.Column="2"
-                              Grid.Row="0"
-                              Style="{DynamicResource MaterialDesignCardGroupBox}"
-                              materialDesign:ColorZoneAssist.Mode="Custom"
-                              materialDesign:ColorZoneAssist.Background="White"
-                              materialDesign:ColorZoneAssist.Foreground="White"
-                              Margin="5">
+                        <GroupBox
+                            Grid.Row="0"
+                            Grid.Column="2"
+                            Margin="5"
+                            materialDesign:ColorZoneAssist.Background="White"
+                            materialDesign:ColorZoneAssist.Foreground="White"
+                            materialDesign:ColorZoneAssist.Mode="Custom"
+                            Style="{DynamicResource MaterialDesignCardGroupBox}">
                             <GroupBox.Header>
                                 <Label>
-                                    <TextBlock Text="Программное обеспечение"/>
+                                    <TextBlock Text="Программное обеспечение" />
                                 </Label>
                             </GroupBox.Header>
                             <StackPanel>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Padding="0"
-                                Click="Button_ClearTemps_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Почистить Windows"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Click="Button_DelChromeCache_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Очистить кэш Chrome"/>
-                                <Button TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                                TextElement.FontSize="12"
-                                Padding="0"
-                                Click="Button_InstallPuntoSwitcher_Click"
-                                Style="{DynamicResource MaterialDesignFlatButton}"
-                                Content="Установить Punto Switcher"/>
+                                <Button
+                                    Padding="0"
+                                    Click="Button_ClearTemps_Click"
+                                    Content="Почистить Windows"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Click="Button_DelChromeCache_Click"
+                                    Content="Очистить кэш Chrome"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Padding="0"
+                                    Click="Button_InstallPuntoSwitcher_Click"
+                                    Content="Установить Punto Switcher"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
+                                <Button
+                                    Padding="0"
+                                    Click="Button_Install7zip19_Click"
+                                    Content="Установить 7zip 19"
+                                    Style="{DynamicResource MaterialDesignFlatButton}"
+                                    TextElement.FontSize="12"
+                                    TextElement.Foreground="{DynamicResource MaterialDesignBody}" />
                             </StackPanel>
                         </GroupBox>
-                        <StackPanel Grid.Row="2"
-                                Grid.Column="0"
-                                MinHeight="100"/>
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            MinHeight="100" />
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="MakeATicket"
-                     Height="36"
-                     Width="130"
-                     Header="Создать заявку">
+                <TabItem
+                    x:Name="MakeATicket"
+                    Width="130"
+                    Height="36"
+                    Header="Создать заявку">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="20"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="100" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="8" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <ComboBox
-                              Grid.Row="0"
-                              Grid.Column="1"
-                              Margin="0 20 20 10"
-                              Name="ComboBox_UserDealership"
-                              ItemsSource="{Binding Dealerships}"
-                              SelectedIndex="{Binding UserDealership,UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock Grid.Row="1"
-                               Grid.Column="1"
-                               Margin="0 10 2 2"
-                               HorizontalAlignment="Left"
-                               Text="Комментарий:"/>
-                        <TextBox Grid.Row="2"
-                             Grid.Column="1"
-                             Margin="1 0 23 0"
-                             AcceptsReturn="True"
-                             TextWrapping="Wrap"
-                             Style="{StaticResource MaterialDesignOutlinedTextBox}"
-                             Padding="5"
-                             MinHeight="140"
-                             MaxHeight="300"
-                             Text="{Binding TicketClaim,NotifyOnSourceUpdated=True,Mode=TwoWay,UpdateSourceTrigger=PropertyChanged}"/>
-                        <Button x:Name="MakeTicket"
-                            TextElement.Foreground="Black"
-                            Grid.Row="3"
-                            Grid.Column="1"
-                            Margin="0 -4 21 10"
-                            Click="Button_MakeATicket_Click"
-                            Content="Создать заявку"/>
-                        <StackPanel Grid.Row="4"
-                                Grid.Column="1"
-                                Height="100"/>
-                    </Grid>
-                </TabItem>
-                <TabItem x:Name="Printers"
-                     Height="36"
-                     Width="130"
-                     Header="Принтеры">
-                    <Grid>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="10 15 10 0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"
-                               Text="Принтеры:"/>
-                        <ListBox Grid.Row="1"
-                             Grid.Column="0"
-                             Height="150"
-                             MaxHeight="170"
-                             x:Name="PrinterList"
-                             SelectionMode="Single"
-                             ScrollViewer.VerticalScrollBarVisibility="Visible"
-                             ScrollViewer.CanContentScroll="True"
-                             ScrollViewer.IsDeferredScrollingEnabled="True"
-                             Margin="15 0 15 0"
-                             MouseDoubleClick="PrinterDescriptions_MouseDoubleClick"
-                             ItemsSource="{Binding Printers}"
-                             SelectedItem="{Binding SelectedPrinter,UpdateSourceTrigger=PropertyChanged}"/>
-                        <TextBlock Grid.Row="2"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                        <Hyperlink NavigateUri="{Binding PrinterLink,UpdateSourceTrigger=PropertyChanged}">
-                            <TextBlock Text="{Binding PrinterLink,UpdateSourceTrigger=PropertyChanged}"/>
-                        </Hyperlink>
-                    </TextBlock>
-                        <Button Grid.Row="3"
-                            Grid.Column="1"
+                        <materialDesign:PackIcon
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="10,0,0,0"
                             HorizontalAlignment="Left"
-                            Margin="10 10 0 10"
-                            Width="115"
-                            Height="25"
-                            TextElement.Foreground="Black"
-                            Click="Button_ConnectPrinter_Click"
-                            Content="Подключить"/>
-                        <StackPanel Grid.Row="4"
-                                Grid.Column="1"
-                                Height="1000"/>
+                            VerticalAlignment="Center"
+                            Foreground="{Binding IconsColor}"
+                            Kind="MapMarkerOutline" />
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="35,10,2,2"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="Локация:"
+                            TextBlock.FontFamily="Segoe UI"
+                            TextBlock.FontSize="12"
+                            TextBlock.FontWeight="SemiBold"
+                            TextBlock.Foreground="Black" />
+                        <ComboBox
+                            Name="ComboBox_UserDealership"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Width="390"
+                            Margin="0,20,20,10"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding Dealerships}"
+                            SelectedIndex="{Binding UserDealership, UpdateSourceTrigger=PropertyChanged}" />
+                        <Menu
+                            Name="TicketThemeSelect_Menu"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Height="45"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center">
+                            <MenuItem
+                                Name="TicketSelect_MenuItem_Main"
+                                Width="200"
+                                Margin="0,0,0,0">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="20"
+                                            Height="20"
+                                            Margin="-5,0,0,0"
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center"
+                                            Foreground="{Binding IconsColor}"
+                                            Kind="SitemapOutline" />
+                                        <ContentPresenter
+                                            VerticalAlignment="Bottom"
+                                            Content="  Тема: "
+                                            TextBlock.FontFamily="Segoe UI"
+                                            TextBlock.FontSize="12"
+                                            TextBlock.FontWeight="SemiBold"
+                                            TextBlock.Foreground="Black" />
+                                        <materialDesign:PackIcon
+                                            Width="18"
+                                            Height="18"
+                                            Margin="-3,0,0,-3"
+                                            VerticalAlignment="Bottom"
+                                            Foreground="{Binding IconsColor}"
+                                            Kind="MenuDown" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </Menu>
+                        <ComboBox
+                            Name="ComboBox_TicketTheme"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Width="390"
+                            Margin="0,20,20,10"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding TicketThemesList}"
+                            SelectedIndex="{Binding SelectedTicketThemeIndex, UpdateSourceTrigger=Explicit}" />
+                        <materialDesign:Card
+                            Grid.RowSpan="3"
+                            Grid.Column="1"
+                            Width="90"
+                            Height="35"
+                            Margin="0,0,13,49"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Bottom">
+                            <Menu
+                                Width="150"
+                                Height="134"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                IsEnabled="{Binding IsTicketClaimFilled, UpdateSourceTrigger=PropertyChanged}">
+                                <MenuItem
+                                    Width="200"
+                                    Height="130"
+                                    Margin="30,0,0,0"
+                                    Click="Button_MakeATicket_Click">
+                                    <MenuItem.Header>
+                                        <StackPanel Orientation="Horizontal">
+                                            <ContentPresenter
+                                                Margin="-8,0,0,0"
+                                                Content="Создать"
+                                                TextBlock.FontFamily="Segoe UI"
+                                                TextBlock.FontSize="14"
+                                                TextBlock.FontWeight="SemiBold"
+                                                TextBlock.Foreground="Black" />
+                                            <materialDesign:PackIcon
+                                                Width="15"
+                                                Height="15"
+                                                Margin="5,0,0,0"
+                                                HorizontalAlignment="Left"
+                                                VerticalAlignment="Bottom"
+                                                Foreground="{Binding IconsColor}"
+                                                Kind="SendOutline" />
+                                        </StackPanel>
+                                    </MenuItem.Header>
+                                </MenuItem>
+                            </Menu>
+                        </materialDesign:Card>
+                        <materialDesign:PackIcon
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Width="20"
+                            Height="20"
+                            Margin="10,0,0,0"
+                            HorizontalAlignment="left"
+                            VerticalAlignment="Bottom"
+                            Foreground="{Binding IconsColor}"
+                            Kind="CommentEditOutline" />
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.ColumnSpan="2"
+                            Margin="36,20,2,2"
+                            HorizontalAlignment="left"
+                            VerticalAlignment="Bottom"
+                            Text="Комментарий:"
+                            TextBlock.FontFamily="Segoe UI"
+                            TextBlock.FontSize="12"
+                            TextBlock.FontWeight="SemiBold"
+                            TextBlock.Foreground="Black" />
+                        <TextBox
+                            Name="TextBox_TicketClaim"
+                            Grid.Row="3"
+                            Grid.ColumnSpan="2"
+                            MinHeight="105"
+                            MaxHeight="300"
+                            Margin="20,0,12,0"
+                            Padding="5"
+                            AcceptsReturn="True"
+                            Style="{StaticResource MaterialDesignOutlinedTextBox}"
+                            Text="{Binding TicketClaim, UpdateSourceTrigger=PropertyChanged}"
+                            TextWrapping="Wrap" />
+                        <StackPanel
+                            Grid.Row="4"
+                            Grid.Column="1"
+                            Height="100" />
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="Instructions"
-                     Height="36"
-                     Width="130"
-                     Header="Инструкции">
+                <TabItem
+                    x:Name="Printers"
+                    Width="130"
+                    Height="36"
+                    Header="Мои принтеры">
                     <Grid>
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="150" />
                         </Grid.ColumnDefinitions>
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
-                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
-                        <TextBlock Grid.Row="0"
-                               Grid.Column="0"
-                               Margin="10 15 10 0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"
-                               Text="Рольф:"/>
-                        <TextBlock Grid.Row="1"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://dp-wiki/index.php/%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F">
-                                <TextBlock Text="Инструкции к системам Рольф"/>
+                        <ListView
+                            x:Name="AddPrinter"
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Width="5000"
+                            Height="Auto"
+                            Margin="0,15,10,0"
+                            HorizontalAlignment="Left"
+                            ScrollViewer.CanContentScroll="False"
+                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                            ScrollViewer.IsDeferredScrollingEnabled="False"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden"
+                            SelectionMode="Single">
+                            <ListView.ItemsSource>
+                                <CompositeCollection>
+                                    <ListViewItem Height="Auto">
+                                        <Expander
+                                            Width="5000"
+                                            Height="Auto"
+                                            Margin="-15"
+                                            HorizontalAlignment="Stretch"
+                                            VerticalAlignment="Center">
+                                            <Expander.Header>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <materialDesign:PackIcon
+                                                        Width="24"
+                                                        Height="24"
+                                                        Margin="0,0,15,10"
+                                                        HorizontalAlignment="left"
+                                                        VerticalAlignment="Center"
+                                                        Foreground="#212121"
+                                                        Kind="PlusBoxOutline" />
+                                                    <TextBlock
+                                                        Margin="0,0,0,10"
+                                                        VerticalAlignment="Center"
+                                                        Text="Добавить новый принтер" />
+                                                </StackPanel>
+                                            </Expander.Header>
+                                            <StackPanel Margin="33,-15,0,5" Orientation="Horizontal">
+                                                <StackPanel Orientation="Vertical">
+                                                    <TextBox
+                                                        Name="PrinterNumber_TextBox"
+                                                        Width="245"
+                                                        Height="Auto"
+                                                        Margin="0,0,0,0"
+                                                        materialDesign:HintAssist.HelperText="{Binding PrinterLink_HelperText, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        materialDesign:HintAssist.Hint="Ввести номер принтера"
+                                                        materialDesign:TextFieldAssist.PrefixText=""
+                                                        materialDesign:TextFieldAssist.SuffixText=""
+                                                        Text="{Binding NewPrinterNumber, NotifyOnSourceUpdated=True, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        Visibility="Visible" />
+                                                    <TextBlock Margin="0,0,0,30" Visibility="{Binding PrinterLink_Valid}">
+                                                        <Hyperlink Click="Button_ConnectPrinter_Click" NavigateUri="{Binding PrinterLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                                                            <Hyperlink.Inlines>
+                                                                <Run Text="{Binding PrinterLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                                            </Hyperlink.Inlines>
+                                                        </Hyperlink>
+                                                    </TextBlock>
+                                                    <TextBlock
+                                                        Name="PrinterLink"
+                                                        Margin="0,0,0,30"
+                                                        Foreground="DarkRed"
+                                                        Text="{Binding PrinterLink, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                                        Visibility="{Binding PrinterLink_Unvalid}" />
+                                                </StackPanel>
+                                                <Button
+                                                    Width="Auto"
+                                                    Height="25"
+                                                    Margin="20,0,0,0"
+                                                    Padding="10,0,10,0"
+                                                    HorizontalAlignment="Center"
+                                                    VerticalAlignment="Top"
+                                                    Click="Button_ConnectPrinter_Click"
+                                                    Content="Подключить"
+                                                    IsEnabled="{Binding IsNewPrinterFound}"
+                                                    Style="{DynamicResource MaterialDesignRaisedButton}"
+                                                    TextElement.Foreground="Black"
+                                                    Visibility="Visible" />
+                                            </StackPanel>
+                                        </Expander>
+                                    </ListViewItem>
+                                </CompositeCollection>
+                            </ListView.ItemsSource>
+                        </ListView>
+                        <Menu
+                            Name="PrintersRoomSelect_Menu"
+                            Grid.Row="0"
+                            Grid.Column="1"
+                            Height="65"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top">
+                            <MenuItem
+                                Name="PrintersSelect_MenuItem_Main"
+                                Width="65"
+                                Height="65"
+                                Margin="0,0,0,0">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="0,0,-15,0"
+                                            Padding="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Foreground="#212121"
+                                            Kind="TruckFastOutline" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </Menu>
+                        <Menu
+                            Name="RefreshPrintersList_Menu"
+                            Grid.Row="1"
+                            Grid.Column="1"
+                            Height="65"
+                            Margin="0,0,0,0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Top">
+                            <MenuItem
+                                Width="65"
+                                Height="65"
+                                Margin="0,0,0,0"
+                                Click="Button_RefreshPrintersList_Click">
+                                <MenuItem.Header>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon
+                                            Width="30"
+                                            Height="30"
+                                            Margin="0,0,-15,0"
+                                            Padding="0"
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            Foreground="{Binding IconsColor}"
+                                            Kind="reload" />
+                                    </StackPanel>
+                                </MenuItem.Header>
+                            </MenuItem>
+                        </Menu>
+                        <ListView
+                            x:Name="MyPrinters"
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Width="5000"
+                            Height="Auto"
+                            MaxHeight="165"
+                            Margin="0,0,10,0"
+                            HorizontalAlignment="Left"
+                            ItemsSource="{Binding LocalPrinters, UpdateSourceTrigger=PropertyChanged}"
+                            ScrollViewer.CanContentScroll="True"
+                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                            ScrollViewer.IsDeferredScrollingEnabled="True"
+                            ScrollViewer.VerticalScrollBarVisibility="Visible"
+                            SelectionMode="Single">
+                            <ListView.Resources>
+                                <Style TargetType="GridViewColumnHeader">
+                                    <Setter Property="Visibility" Value="Collapsed" />
+                                </Style>
+                            </ListView.Resources>
+                            <ListView.View>
+                                <GridView>
+                                    <GridViewColumn>
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Expander
+                                                    Width="5000"
+                                                    Height="Auto"
+                                                    Margin="-15"
+                                                    HorizontalAlignment="Stretch"
+                                                    VerticalAlignment="Center">
+                                                    <Expander.Header>
+                                                        <StackPanel Orientation="Vertical">
+                                                            <StackPanel Orientation="Horizontal">
+                                                                <materialDesign:PackIcon
+                                                                    Width="24"
+                                                                    Height="24"
+                                                                    Margin="-6,10,10,0"
+                                                                    HorizontalAlignment="left"
+                                                                    VerticalAlignment="Center"
+                                                                    Foreground="#212121"
+                                                                    Kind="PrinterOutline" />
+                                                                <TextBlock
+                                                                    Margin="5,10,0,3"
+                                                                    VerticalAlignment="Center"
+                                                                    Text="{Binding PrinterName}" />
+                                                            </StackPanel>
+                                                            <StackPanel
+                                                                Height="Auto"
+                                                                Margin="33,0,0,0"
+                                                                Orientation="Horizontal">
+                                                                <TextBlock
+                                                                    VerticalAlignment="Center"
+                                                                    FontSize="11"
+                                                                    Opacity="0.9"
+                                                                    Text="{Binding PrinterDescription}" />
+                                                            </StackPanel>
+                                                        </StackPanel>
+                                                    </Expander.Header>
+                                                    <StackPanel Margin="57,0,0,0" Orientation="Horizontal">
+                                                        <StackPanel Orientation="Horizontal" Visibility="{Binding Expander_Visibility}">
+                                                            <Button
+                                                                Width="Auto"
+                                                                Height="25"
+                                                                Margin="0,0,5,20"
+                                                                Padding="10,0,10,0"
+                                                                Click="Button_SetAsDefaultPrinter_Click"
+                                                                Content="Установить по умолчанию"
+                                                                Style="{StaticResource MaterialDesignOutlinedDarkButton}"
+                                                                Visibility="{Binding Button_SetDeafult_Visibility}" />
+                                                            <Button
+                                                                Width="Auto"
+                                                                Height="25"
+                                                                Margin="5,0,5,20"
+                                                                Padding="10,0,10,0"
+                                                                Click="Button_DirectlyConnectPrinter_Click"
+                                                                Content="Подключить напрямую"
+                                                                IsEnabled="{Binding Button_ConnectDirectly_IsEnabled}"
+                                                                Style="{StaticResource MaterialDesignOutlinedDarkButton}"
+                                                                Visibility="{Binding Button_ConnectDirectly_Visibility}" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Expander>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                    </GridViewColumn>
+                                </GridView>
+                            </ListView.View>
+                        </ListView>
+                        <StackPanel
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Height="1000" />
+                    </Grid>
+                </TabItem>
+                <TabItem
+                    x:Name="Instructions"
+                    Width="130"
+                    Height="36"
+                    Header="Инструкции">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <TextBlock
+                            Grid.Row="0"
+                            Grid.Column="0"
+                            Margin="10,15,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="Рольф:" />
+                        <TextBlock
+                            Grid.Row="1"
+                            Grid.Column="0"
+                            Margin="15,5,0,0">
+                            <Hyperlink NavigateUri="http://dp-wiki/index.php/%D0%93%D0%BB%D0%B0%D0%B2%D0%BD%D0%B0%D1%8F" RequestNavigate="HandleLinkClick">
+                                <TextBlock Text="Инструкции к системам Рольф" />
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Grid.Row="2"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="https://soft.isb.rolf.ru/qp/load/Rolf_remote_access.pdf">
-                                <TextBlock Text="Инструкция по удаленному доступу"/>
+                        <TextBlock
+                            Grid.Row="2"
+                            Grid.Column="0"
+                            Margin="15,5,0,0">
+                            <Hyperlink NavigateUri="https://soft.isb.rolf.ru/qp/load/Rolf_remote_access.pdf" RequestNavigate="HandleLinkClick">
+                                <TextBlock Text="Инструкция по удаленному доступу" />
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Grid.Row="3"
-                               Grid.Column="0"
-                               Margin="10 15 10 0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"
-                               Text="Прочее:"/>
-                        <TextBlock Grid.Row="4"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://dp-wiki/index.php/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D1%8E_%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0_%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%BE%D0%B9_%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B8">
-                                <TextBlock Text="Инструкция ЭЦП для Диадок и Экстерн"/>
+                        <TextBlock
+                            Grid.Row="3"
+                            Grid.Column="0"
+                            Margin="10,15,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="Прочее:" />
+                        <TextBlock
+                            Grid.Row="4"
+                            Grid.Column="0"
+                            Margin="15,5,0,0">
+                            <Hyperlink NavigateUri="http://dp-wiki/index.php/%D0%98%D0%BD%D1%81%D1%82%D1%80%D1%83%D0%BA%D1%86%D0%B8%D1%8F_%D0%BF%D0%BE%D0%BB%D1%8C%D0%B7%D0%BE%D0%B2%D0%B0%D1%82%D0%B5%D0%BB%D1%8F_%D0%BF%D0%BE_%D0%BF%D0%BE%D0%BB%D1%83%D1%87%D0%B5%D0%BD%D0%B8%D1%8E_%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%B0_%D1%8D%D0%BB%D0%B5%D0%BA%D1%82%D1%80%D0%BE%D0%BD%D0%BD%D0%BE%D0%B9_%D0%BF%D0%BE%D0%B4%D0%BF%D0%B8%D1%81%D0%B8" RequestNavigate="HandleLinkClick">
+                                <TextBlock Text="Инструкция ЭЦП для Диадок и Экстерн" />
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Grid.Row="5"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://myrolf/group/rolf/sotrudniku/instrukcii">
-                                <TextBlock Text="ССД, 1С Документооборот, Кассы, Мой Рольф, ЭЦП Диадок, ЭПТС"/>
+                        <TextBlock
+                            Grid.Row="5"
+                            Grid.Column="0"
+                            Margin="15,5,0,0">
+                            <Hyperlink NavigateUri="http://myrolf/group/rolf/sotrudniku/instrukcii" RequestNavigate="HandleLinkClick">
+                                <TextBlock Text="ССД, 1С Документооборот, Кассы, Мой Рольф, ЭЦП Диадок, ЭПТС" />
                             </Hyperlink>
                         </TextBlock>
-                        <TextBlock Grid.Row="6"
-                               Grid.Column="0"
-                               Margin="10 15 10 0"
-                               HorizontalAlignment="Left"
-                               VerticalAlignment="Center"
-                               Text="Корпоративная безопасность:"/>
-                        <TextBlock Grid.Row="7"
-                               Grid.Column="0"
-                               Margin="15 5 0 0">
-                            <Hyperlink RequestNavigate="HandleLinkClick" NavigateUri="http://myrolf/group/rolf/sb_dajdzest">
-                                <TextBlock Text="Дайджесты и тесты Департамента Корпоративной Безопасности  "/>
+                        <TextBlock
+                            Grid.Row="6"
+                            Grid.Column="0"
+                            Margin="10,15,10,0"
+                            HorizontalAlignment="Left"
+                            VerticalAlignment="Center"
+                            Text="Корпоративная безопасность:" />
+                        <TextBlock
+                            Grid.Row="7"
+                            Grid.Column="0"
+                            Margin="15,5,0,0">
+                            <Hyperlink NavigateUri="http://myrolf/group/rolf/sb_dajdzest" RequestNavigate="HandleLinkClick">
+                                <TextBlock Text="Дайджесты и тесты Департамента Корпоративной Безопасности  " />
                             </Hyperlink>
                         </TextBlock>
-                        <StackPanel Grid.Row="10"
-                                Grid.Column="1"
-                                Height="1000"/>
+                        <StackPanel
+                            Grid.Row="10"
+                            Grid.Column="1"
+                            Height="1000" />
                     </Grid>
                 </TabItem>
             </dragablz:TabablzControl>
