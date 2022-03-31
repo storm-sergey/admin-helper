@@ -7,19 +7,231 @@ using System.Windows.Forms;
 using AdminHelper.ViewModel;
 using BusyIndicator;
 using System.Drawing;
+using System.Windows.Controls;
+using System.Collections.Generic;
+using AdminHelper.lib;
+using MenuItem = System.Windows.Controls.MenuItem;
+using System.Windows.Data;
+using AdminHelper.Model;
+using System.ComponentModel;
 
 namespace AdminHelper.View
- {
+{
     public partial class MainWindow : Window
     {
         private readonly MainWindowVM mainWindowVM;
         private NotifyIcon trayIcon;
-        private ContextMenu trayMenu;
-        
+        private System.Windows.Forms.ContextMenu trayMenu;
+
+
+        public MainWindow()
+        {
+            mainWindowVM = new MainWindowVM();
+            DataContext = mainWindowVM;
+
+            InitializeComponent();
+            MakeTicketMenu();
+            MakePrinterMenu();
+            MakeTray();
+            Task.Run(() => mainWindowVM.MainWindowV = this);
+        }
+
+        private MenuItem AddMenuItem(MenuItem parent, string item)
+        {
+            MenuItem menuItem = new MenuItem { Header = item };
+            parent.Items.Add(menuItem);
+            return menuItem;
+        }
+
+        #region Ticket Theme Menu
+        private void MakeTicketMenu()
+        {
+            MenuItem rootMenuItem = TicketSelect_MenuItem_Main;
+            HashSet<JsonTreeNode>.Enumerator nodes = mainWindowVM.TicketTemplatesJson.GetChildrenEnumerator();
+            ComboBox_TicketTheme.SelectionChanged += UpdateTextBox;
+
+            MakeTicketMenu(
+                nodes,
+                rootMenuItem,
+                MenuItem_TicketThemeMenu_Click,
+                MenuItem_TicketThemeMenu_DoubleClick
+            );
+        }
+
+        public void MakeTicketMenu(
+            HashSet<JsonTreeNode>.Enumerator nodes,
+            MenuItem parentMenu,
+            Action<object, RoutedEventArgs> click,
+            Action<object, RoutedEventArgs> doubleClick = null)
+        {
+            while (nodes.MoveNext())
+            {
+                if (nodes.Current.IsALeaf())
+                {
+                    return;
+                }
+                MenuItem item = AddMenuItem(parentMenu, nodes.Current.GetData());
+                item.Tag = Json.GetFullPath(nodes.Current);
+                item.Click += new RoutedEventHandler(click);
+                if (doubleClick != null)
+                {
+                    item.MouseDoubleClick += new System.Windows.Input.MouseButtonEventHandler(doubleClick);
+                }
+
+                if (nodes.Current.GetChildCount() > 0
+                && !nodes.Current.AreChildrenLeaves())
+                {
+                    HashSet<JsonTreeNode>.Enumerator children = nodes.Current.GetChildrenEnumerator();
+                    MakeTicketMenu(children, item, click, doubleClick);
+                }
+            }
+        }
+
+        private void UpdateTextBox(object sender, SelectionChangedEventArgs args)
+        {
+            if (ComboBox_TicketTheme.SelectedValue == null)
+            {
+                TextBox_TicketClaim.Text = "";
+                return;
+            }
+
+            mainWindowVM.SelectedTicketTheme = ComboBox_TicketTheme.SelectedValue.ToString();
+            mainWindowVM.TicketClaim = mainWindowVM.GetTicketClaimByTicketThemeIndex(ComboBox_TicketTheme.SelectedIndex);
+            ComboBox_TicketTheme_Update();
+        }
+
+        public void ComboBox_TicketTheme_Update()
+        {
+            BindingExpression i = ComboBox_TicketTheme.GetBindingExpression(System.Windows.Controls.ComboBox.SelectedIndexProperty);
+            i.UpdateSource();
+        }
+
+        public void MenuItem_TicketThemeMenu_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MenuItem item = e.OriginalSource as MenuItem;
+                string s = item.Tag.ToString();
+
+                if (item != null)
+                {
+                    // select item in ComboBox
+                    ComboBox_TicketTheme.SelectedIndex = mainWindowVM.GetTicketThemeIndex(s);
+                    // put template in TextBox
+                    mainWindowVM.SelectedTicketThemeIndex = mainWindowVM.GetTicketThemeIndex(s);
+                }
+                ComboBox_TicketTheme_Update();
+            }
+            catch (Exception ex)
+            {
+                AppException.Handle(ex);
+            }
+        }
+
+        public void MenuItem_TicketThemeMenu_DoubleClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                MenuItem item = (MenuItem) sender;
+                string s = item.Tag.ToString();
+
+                if (item != null)
+                {
+                    // select item in ComboBox
+                    ComboBox_TicketTheme.SelectedIndex = mainWindowVM.GetTicketThemeIndex(s);
+                    // put template in TextBox
+                    mainWindowVM.SelectedTicketThemeIndex = mainWindowVM.GetTicketThemeIndex(s);
+                }
+                ComboBox_TicketTheme_Update();
+            }
+            catch (Exception) { }
+        }
+        #endregion
+
+        #region Printer Map Menu
+        private void MakePrinterMenu()
+        {
+            MenuItem rootMenuItem = PrintersSelect_MenuItem_Main;
+            HashSet<JsonTreeNode>.Enumerator nodes = mainWindowVM.PrintersMapJson.GetChildrenEnumerator();
+            while (nodes.MoveNext())
+            {
+                if (nodes.Current.GetData().ToUpper() == mainWindowVM.UserDealershipName.ToUpper())
+                {
+                    MakePrinterMapMenu(
+                    nodes.Current.GetChildrenEnumerator(),
+                    rootMenuItem,
+                    MenuItem_PrinterRoomMenu_Click);
+                    return;
+                }
+            }
+            PrintersSelect_MenuItem_Main.IsEnabled = false;
+        }
+
+        public void MakePrinterMapMenu(
+            HashSet<JsonTreeNode>.Enumerator nodes,
+            MenuItem parentMenu,
+            Action<object, RoutedEventArgs> click)
+        {
+            while (nodes.MoveNext())
+            {
+                if (nodes.Current.IsALeaf())
+                {
+                    return;
+                }
+
+                MenuItem item = AddMenuItem(parentMenu, nodes.Current.GetData());
+
+                if (nodes.Current.GetChildCount() > 0)
+                {
+                    if (nodes.Current.AreChildrenLeaves())
+                    {
+                        string[] printers = Json.CollectSiblingChildrenData(nodes.Current);
+                        item.Tag = String.Join(" ", printers);
+                        item.Click += new RoutedEventHandler(click);
+                    }
+                    else
+                    {
+                        HashSet<JsonTreeNode>.Enumerator children = nodes.Current.GetChildrenEnumerator();
+                        MakePrinterMapMenu(children, item, click);
+                    }
+                }
+            }
+        }
+
+        public void MenuItem_PrinterRoomMenu_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = e.OriginalSource as MenuItem;
+            string[] printers = item.Tag.ToString().Split(' ');
+            LoadingAndMessaging<string[]>(_MenuItem_PrinterRoomMenu_Click, printers);
+        }
+
+        public async Task<string> _MenuItem_PrinterRoomMenu_Click(string[] printers)
+        {
+            try
+            {
+                foreach (string printer in printers)
+                {
+                    mainWindowVM.NewPrinterNumber = printer;
+                    await mainWindowVM.ConnectPrinter(mainWindowVM.PrinterLink);
+                }
+                return $"Принтеры с номерами:" +
+                    $"\n{String.Join(",", printers)}" +
+                    $"\nподключены!";
+            }
+            catch (Exception ex)
+            {
+                return AppException.Handle(ex);
+            }
+        }
+
+
+        #endregion
+
+        #region Tray
         /// <summary>
         /// Tray
         /// </summary>
-        private void SetIconToMainApplication()
+        private void MakeTray()
         {
             trayIcon = new NotifyIcon
             {
@@ -27,49 +239,63 @@ namespace AdminHelper.View
                 Visible = true,
                 BalloonTipIcon = ToolTipIcon.Info,
                 BalloonTipTitle = "Помощник пользователя",
+            };
 
-        };
-            trayIcon.MouseDoubleClick += new MouseEventHandler(this._notifyicon_DoublecClick);
-            //trayIcon.BalloonTipIcon = ToolTipIcon.Info;
-            //trayIcon.BalloonTipTitle = "Помощник пользователя";
-            trayIcon.ShowBalloonTip(500, "Быстрая помощь", "Автоматизация Service Desk \n it Рольф", ToolTipIcon.Info);
-            trayMenu = new ContextMenu();
-            trayMenu.MenuItems.Add("Помощь");
-            trayMenu.MenuItems[0].MenuItems.Add("Быстрая помощь", contx);
-            trayMenu.MenuItems[0].MenuItems.Add("Заявка", contx);
-            trayMenu.MenuItems[0].MenuItems.Add("Принтеры", contx);
-            trayMenu.MenuItems[0].MenuItems.Add("Инструкции", contx);
-            trayMenu.MenuItems.Add("Закрыть", (object sender, EventArgs e) => Close());
+            trayIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(Notifyicon_DoublecClick);
+            trayIcon.BalloonTipIcon = ToolTipIcon.Info;
+            trayIcon.BalloonTipTitle = "Помощник пользователя";
+            trayIcon.ShowBalloonTip(500, "Помощник пользователя", "Автоматизация Service Desk \n it Рольф", ToolTipIcon.Info);
+
+            trayMenu = new System.Windows.Forms.ContextMenu();
+
+            trayMenu.MenuItems.Add("Имя и IP", (object sender, EventArgs e) => Button_ShowComputerNameAndIP_Click(sender, null));
+            trayMenu.MenuItems.Add("ARMS fix", (object sender, EventArgs e) => Button_Fix_ARMS_Click(sender, null));
+            trayMenu.MenuItems.Add("Диск Б", (object sender, EventArgs e) => Button_BDrive_Click(sender, null));
+            trayMenu.MenuItems.Add("Скопировать рабочий стол", (object sender, EventArgs e) => Button_CopyDesktop_Click(sender, null));
+            trayMenu.MenuItems.Add("Почистить временные файлы", (object sender, EventArgs e) => Button_ClearTemps_Click(sender, null));
+            trayMenu.MenuItems.Add("-");
+            trayMenu.MenuItems.Add("Быстрая помощь", (object sender, EventArgs e) => OpenFromTray(FastFix));
+            trayMenu.MenuItems.Add("Заявка", (object sender, EventArgs e) => OpenFromTray(MakeATicket));
+            trayMenu.MenuItems.Add("Принтеры", (object sender, EventArgs e) => OpenFromTray(Printers));
+            trayMenu.MenuItems.Add("Инструкции", (object sender, EventArgs e) => OpenFromTray(Instructions));
+
             trayIcon.ContextMenu = trayMenu;
             trayIcon.Visible = true;
         }
 
-        private void _notifyicon_DoublecClick(object sender, EventArgs e)
+        private void OpenFromTray(TabItem tab)
         {
-            this.Show();
+            Show();
             WindowState = WindowState.Normal;
-            this.ShowInTaskbar = true;
+            ShowInTaskbar = true;
+            mainWindow_TabControl.SelectedItem = tab;
         }
 
-        private void contx(object sender, EventArgs e)
+        private void Notifyicon_DoublecClick(object sender, EventArgs e)
         {
-            // Mock
+            OpenFromTray(FastFix);
         }
 
-        public MainWindow()
+        protected override void OnStateChanged(EventArgs e)
         {
-            InitializeComponent();
-            mainWindowVM = new MainWindowVM();
-            DataContext = mainWindowVM;
-            SetIconToMainApplication();
-            //Visibility = Visibility.Hidden;
+            if (WindowState == WindowState.Minimized)
+            {
+                Hide();
+                trayIcon.ShowBalloonTip(500, "Помощник пользователя", "Приложение свёрнуто в трэй", ToolTipIcon.Info);
+            }
+            base.OnStateChanged(e);
         }
 
-        public void MainMenu_Closing()
+        protected override void OnClosing(CancelEventArgs e)
         {
-
+            e.Cancel = true;
+            Hide();
+            trayIcon.ShowBalloonTip(500, "Помощник пользователя", "Приложение свёрнуто в трэй\nВыход здесь", ToolTipIcon.Info);
+            //base.OnClosing(e);
         }
+        #endregion
 
+        #region Blocking Loading
         private void ShowLoading(string loadingMessage = "Выполнение...")
         {
             BusyIndicator.BusyContent = loadingMessage;
@@ -80,7 +306,7 @@ namespace AdminHelper.View
         {
             Array values = Enum.GetValues(typeof(IndicatorType));
             Random random = new Random();
-            BusyIndicator.IndicatorType = (IndicatorType)values.GetValue(random.Next(values.Length));
+            BusyIndicator.IndicatorType = (IndicatorType) values.GetValue(random.Next(values.Length));
             ShowLoading(loadingMessage);
         }
 
@@ -101,40 +327,51 @@ namespace AdminHelper.View
             Opacity = 1;
         }
 
-        private async void WithLoadingAndMessaging(Func<Task<string>> btn_hundler_VM)
+        private async void LoadingAndMessaging(Func<Task<string>> btn_hundler_VM)
         {
             ShowRandomLoading();
             string message = await btn_hundler_VM();
             HideLoading();
             BlockWindow();
-            new NonModalMessage(UnblockWindow, message).Show();
+            new NonModalMessage(UnblockWindow, message) { Owner = this }.Show();
         }
 
+        private async void LoadingAndMessaging<T>(Func<T, Task<string>> btn_hundler_VM, T arg)
+        {
+            ShowRandomLoading();
+            string message = await btn_hundler_VM(arg);
+            HideLoading();
+            BlockWindow();
+            new NonModalMessage(UnblockWindow, message) { Owner = this }.Show();
+        }
+
+        private void AcceptedLoadingAndMessaging(Func<string> get_question, Func<Task<string>> btn_hundler)
+        {
+            BlockWindow();
+            new NonModalConfirm(
+                UnblockWindow,
+                () => LoadingAndMessaging(btn_hundler),
+                get_question())
+            { Owner = this }.Show();
+        }
+        #endregion
+
+        #region Buttons
         private void Button_CopyDesktop_Click(object sender, RoutedEventArgs e)
         {
             BlockWindow();
-            new CopyWorkspace(UnblockWindow).Show();
-        }
-
-        private void TabablzControl_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-        {
-            // MOCK
+            new CopyWorkspace(UnblockWindow) { Owner = this }.Show();
         }
 
         private void Button_MakeATicket_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.MakeATicket);
+            LoadingAndMessaging(mainWindowVM.MakeATicket);
+            ComboBox_TicketTheme.SelectedIndex = -1;
         }
 
         private void Button_ConnectPrinter_Click(object sender, RoutedEventArgs e)
         {
-
-            WithLoadingAndMessaging(mainWindowVM.ConnectPrinter);
-        }
-
-        private void PrinterDescriptions_MouseDoubleClick(object sender, System.Windows.Input.MouseButtonEventArgs e)
-        {
-            WithLoadingAndMessaging(mainWindowVM.ConnectPrinter);
+            LoadingAndMessaging<string>(mainWindowVM.ConnectPrinter, PrinterLink.Text);
         }
 
         private void Button_RedirectToConnectPrinter_Click(object sender, RoutedEventArgs e)
@@ -144,43 +381,76 @@ namespace AdminHelper.View
 
         private void Button_BDrive_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.BDrive);
+            LoadingAndMessaging(mainWindowVM.BDrive);
         }
 
         private void Button_Fix_ARMS_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.FixARMS);
+            LoadingAndMessaging(mainWindowVM.FixARMS);
         }
 
+        // Ticket 1740008
+        private void Button_ACRolf_DisplayOfGoodsMovementFix_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingAndMessaging(mainWindowVM.Fix_ACRolf_DisplayOfGoodsMovement);
+        }
         private void Button_DelChromeCache_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.RemoveChromeCache);
+            LoadingAndMessaging(mainWindowVM.RemoveChromeCache);
         }
 
         private void Button_InstallPuntoSwitcher_Click(object sender, RoutedEventArgs e)
         {
-
-            WithLoadingAndMessaging(mainWindowVM.InstallPuntoSwitcher);
-            
+            LoadingAndMessaging(mainWindowVM.InstallPuntoSwitcher);
         }
 
         private void Button_ShowComputerNameAndIP_Click(object sender, RoutedEventArgs e)
         {
             BlockWindow();
             string message = mainWindowVM.ComputerNameAndIp;
-            new NonModalMessage(UnblockWindow, message, "Имя компьютера и IP-адрес").Show();
+            new NonModalMessage(
+                UnblockWindow,
+                message,
+                "Имя компьютера и IP-адрес")
+            { Owner = this }.Show();
         }
 
         private void Button_UniplanSquaresFix_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.UniplanSquaresFix);
+            LoadingAndMessaging(mainWindowVM.UniplanSquaresFix);
         }
-
 
         private void Button_ClearTemps_Click(object sender, RoutedEventArgs e)
         {
-            WithLoadingAndMessaging(mainWindowVM.ClearTemps);
+            LoadingAndMessaging(mainWindowVM.ClearTemps);
         }
+
+        private void Button_Install7zip19_Click(object sender, RoutedEventArgs e)
+        {
+            LoadingAndMessaging(mainWindowVM.Install7zip19);
+        }
+
+        private void Button_SetAsDefaultPrinter_Click(object sender, RoutedEventArgs e)
+        {
+            // get clicked printer name
+            System.Windows.Controls.Button button = e.OriginalSource as System.Windows.Controls.Button;
+            LocalPrinter context = (LocalPrinter) button.DataContext;
+            string printerName = context.PrinterName;
+
+            LoadingAndMessaging<string>(mainWindowVM.SetDefaultPrinter, printerName);
+        }
+
+        private async void Button_RefreshPrintersList_Click(object sender, RoutedEventArgs e)
+        {
+            await mainWindowVM.RefreshPrintersList();
+        }
+
+        // TODO
+        private void Button_DirectlyConnectPrinter_Click(object sender, RoutedEventArgs e)
+        {
+            throw new NotImplementedException();
+        }
+        #endregion
 
         private async void HandleLinkClick(object sender, RoutedEventArgs e)
         {
@@ -192,6 +462,7 @@ namespace AdminHelper.View
             await Task.Run(() => System.Threading.Thread.Sleep(2000));
             HideLoading();
         }
+
 
     }
 }
