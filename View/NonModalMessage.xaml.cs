@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading.Tasks;
 using System.Windows;
 using AdminHelper.ViewModel;
 
@@ -8,16 +7,23 @@ namespace AdminHelper.View
 {
     public partial class NonModalMessage : Window
     {
-        private readonly NonModalMessageVM NonModalMessageVM;
+        private readonly NonModalMessageVM nonModalMessageVM;
         private readonly Action UnblockMainWindow;
 
         public NonModalMessage(Action unblockMainWindow, string message, string title = "")
         {
-            this.UnblockMainWindow = unblockMainWindow;
+            UnblockMainWindow = unblockMainWindow;
             InitializeComponent();
-            NonModalMessageVM = new NonModalMessageVM(message, title);
-            NonModalMessageText.Text = NonModalMessageVM.Message;
-            NonModalMessageWindow.Title = NonModalMessageVM.Title;
+            nonModalMessageVM = new NonModalMessageVM(message, title);
+            NonModalMessageText.Text = nonModalMessageVM.Message;
+            NonModalMessageWindow.Title = nonModalMessageVM.Title;
+        }
+        public NonModalMessage(string message, string title = "")
+        {
+            InitializeComponent();
+            nonModalMessageVM = new NonModalMessageVM(message, title);
+            NonModalMessageText.Text = nonModalMessageVM.Message;
+            NonModalMessageWindow.Title = nonModalMessageVM.Title;
         }
 
         private void NonModalMessage_Closing(object sender, System.ComponentModel.CancelEventArgs e)
