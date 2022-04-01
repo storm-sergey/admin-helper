@@ -5,8 +5,10 @@
     <TargetFramework>net48</TargetFramework>
     <UseWPF>true</UseWPF>
     <PlatformTarget>x86</PlatformTarget>
-    <ApplicationIcon>icons\ICON.ico</ApplicationIcon>
     <DebugType>portable</DebugType>
+    <GeneratePackageOnBuild>False</GeneratePackageOnBuild>
+    <ApplicationIcon>icons\ICON.ico</ApplicationIcon>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -43,17 +45,19 @@
   <ItemGroup>
     <PackageReference Include="BusyIndicator" Version="2.0.0.1" />
     <PackageReference Include="Dragablz" Version="0.0.3.223" />
-    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.5" />
     <PackageReference Include="MaterialDesignExtensions" Version="3.3.0" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.4.0" />
     <PackageReference Include="Microsoft.Office.Interop.Outlook" Version="15.0.4797.1003" />
     <PackageReference Include="Microsoft.VisualStudio.UnitTesting" Version="11.0.50727.1" />
     <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
     <PackageReference Include="System.Management" Version="6.0.0" />
+    <PackageReference Include="System.Text.Json" Version="6.0.2" />
   </ItemGroup>
 
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
 
@@ -61,12 +65,16 @@
     <None Update="Resources\B_Drive.bat.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Resources\Printers_Map.txt">
+    <None Update="Resources\Printers_rooms.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 
   <ItemGroup>
+    <Page Update="View\NonModalConfirm.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="View\NonModalMessage.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
     </Page>
