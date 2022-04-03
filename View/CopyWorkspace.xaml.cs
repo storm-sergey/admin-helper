@@ -26,7 +26,6 @@ namespace AdminHelper.View
 
         private void Button_Click_CopyDesktop(object sender, RoutedEventArgs e)
         {
-            // await copyWorkspaceVM.CopyUserWorkspace();
             Task.Run(() => copyWorkspaceVM.CopyUserWorkspace());
             Close();
         }
