@@ -23,17 +23,17 @@ To check other contibutors commits
 - [x] Workspace copying
 - [x] Subnet/Dealership determination
 - [x] Ticket creation
-- [ ] Ticket reason
+- [x] Ticket reason
 - [x] Fast fixes
 - [ ] Enrich the Fast fixes
 - [x] Printers connection
-- [ ] Printers connection by printer map
-- [ ] Tray icon
+- [x] Printers connection by printer map
+- [x] Icon and tray quick access
 - [ ] Screenshot
 - [ ] Hidden printers checking
 - [ ] Fix too long WMI printers query
 - [x] Non-modal popup
-- [ ] Exceptions logic
+- [x] Exceptions logic
 - [x] Progressbar
 - [ ] Usage statistics
 - [x] Instructions page
