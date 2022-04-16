@@ -7,15 +7,14 @@ namespace AdminHelper.lib
     public static class CMD
     {
         private const bool REDIRECT_CMD_STANDARD_INPUT = true;
-        private const bool REDIRECT_CMD_STANDARD_OUTPUT = true;
-        private const bool REDIRECT_CMD_STANDARD_ERROR = true;
+        private const bool REDIRECT_CMD_STANDARD_OUTPUT = false;
+        private const bool REDIRECT_CMD_STANDARD_ERROR = false;
 
         // TODO: check required start info and cut unnecessary
         private static void SetProcessStartInfo(Process cmd)
         {
             cmd.StartInfo = new ProcessStartInfo
             {
-                WindowStyle = ProcessWindowStyle.Hidden,
                 FileName = "cmd.exe",
                 RedirectStandardInput = REDIRECT_CMD_STANDARD_INPUT,
                 RedirectStandardOutput = REDIRECT_CMD_STANDARD_OUTPUT,
@@ -36,25 +35,6 @@ namespace AdminHelper.lib
             {
                 cmd.StandardInput.WriteLine(line);
             }
-        }
-
-        private static List<string> CheckOutput(Process cmd)
-        {
-            List<string> output = null;
-            if (REDIRECT_CMD_STANDARD_OUTPUT)
-            {
-                output = new List<string>();
-                while (cmd.StandardOutput.Peek() > -1)
-                {
-                    output.Add(cmd.StandardOutput.ReadLine());
-                }
-                // TODO: program error
-                //while (cmd.StandardError.Peek() > -1)
-                //{
-                //    output.Add(cmd.StandardError.ReadLine());
-                //}
-            }
-            return output;
         }
 
         // TODO: How to process livecycle
@@ -89,7 +69,6 @@ namespace AdminHelper.lib
                     SetProcessStartInfo(cmd);
                     cmd.Start();
                     PutScript(cmd, script);
-                    output = CheckOutput(cmd).ToString();
                     Close(cmd);
                 }
                 return output;
