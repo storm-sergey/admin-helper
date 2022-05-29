@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "AdminHelper": {
-      "commandName": "Executable",
-      "executablePath": "\\\\xim-it\\d$\\Users\\SAStorm\\source\\repos\\AdminHelper\\bin\\Debug\\net48\\AdminHelper.exe"
-    }
-  }
-}

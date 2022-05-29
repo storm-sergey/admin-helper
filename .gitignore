@@ -1,3 +1,14 @@
 ﻿bin*
 obj*
 .vs*
+README.md
+Globals.cs
+Resources/ARMS*
+Resources/B_Drive*
+Resources/Subnets.json
+Properties/launchSettings.json
+Properties/Resources.Designer.cs
+UpgradeLog*
+.gitfix*
+gitfix*
+.editorconfig

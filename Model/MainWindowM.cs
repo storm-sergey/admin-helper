@@ -73,9 +73,9 @@ namespace AdminHelper.Model
             ChromeCachePath = $@"D:\Users\{UserCredentials.UserName}\AppData\Local\Google\Chrome\User Data\Default\Cache";
             AppDataLocalTempPath = $@"D:\Users\{UserCredentials.UserName}\AppData\Local\Temp";
             ServiceDeskContacts = "\n\n"
-                        + $"Телефон: 52222\n"
+                        + $"Телефон: {SERVICE_DESK_EMAIL}\n"
                         + "                                            \n"
-                        + $"Почта: sd@rolf.ru\n";
+                        + $"Почта: {SERVICE_DESK_PHONE_NUMBER}\n";
             // TODO: test without internter connection
             // Dealership
             SubnetsDealershipsLocal = Properties.Resources.Subnets;

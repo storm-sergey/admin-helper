@@ -16,6 +16,7 @@ namespace AdminHelper.lib
                 ? $@"D:\Users\{UserName}\Desktop"
                 : $@"D:\Users\{UserName}\Рабочий стол";
         }
+        // TODO
         //NetworkCredential myCredentials = new NetworkCredential(String.Format("{0}\\{1}", DOMAIN, userName), password);
     }
 }
