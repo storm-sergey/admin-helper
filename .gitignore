@@ -1,7 +1,6 @@
 ﻿bin*
 obj*
 .vs*
-README.md
 Globals.cs
 Resources/ARMS*
 Resources/B_Drive*
